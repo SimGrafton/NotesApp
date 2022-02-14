@@ -27,6 +27,14 @@ body {
   padding-left: 400px;
 }
 
+/* For sidebar */
+
+/* .sidebar {
+  box-shadow: none;
+} */
+
+/* End sidebar */
+
 /*  For datepicker */
 
 .event a {
