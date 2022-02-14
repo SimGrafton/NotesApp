@@ -48,40 +48,26 @@
         </nav>
         <!-- NavBar End -->
     </header>
-        <div class="page d-flex" style="height: 100%;">
+        <div class="page d-flex w-100 container-fluid h-100" >
+            <div class ="row">
             <!-- Sidebar -->
-            <div class="d-inline-flex flex-column flex-shrink-0 pb-1 bg-light" style="max-width:150px; height: 100%;">
-                <hr>
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        <!-- First Dropdown - Data Updates -->
-                        <li>
-                            <a class="btn nav-link text-left" aria-current="page"" data-toggle="collapse" href="#collapseNotes" role="button" aria-expanded="false" aria-controls="collapseUpdate">
-                                Notes
-                            </a>
-                            <div class=" nav-item collapse" id="collapseNotes">
-                                <!-- <a href="#" class="btnAdd ml-3 text-dark small" style="text-decoration: none !important; display: block;">- Add Data</a> -->
-                            </div>
-                        </li>
-                        <!-- First Dropdown - Data Updates End -->
-                        <!-- Second Dropdown - Show Data -->
-                        <!-- <li>
-                            <a class="btn nav-link text-left" aria-current="page"" data-toggle="collapse" href="#collapseData" role="button" aria-expanded="false" aria-controls="collapseData">
-                                Category 2
-                            </a>
-                            <div class=" nav-item collapse" id="collapseData">
-                                <a href="#" class="btnShow ml-3 text-dark small" style="text-decoration: none !important; display: block;">- Option 1</a>
-                                <a href="#" class="ml-3 text-dark small" style="text-decoration: none !important; display: block;">- Option 2</a>
-                            </div>
-                        </li> -->
-                        <!-- Second Dropdown - Show Data End -->
-                    </ul>
-                <hr>
-            </div>
+                <div class="sidebar d-inline-flex flex-column flex-shrink-0 pb-1 bg-light" style="min-width:180px; max-width:180px;">
+                                
+                                <button class="btn btn-outline-primary mb-2 ml-2 mt-3 w-75" type="button" data-toggle="collapse" data-target="#collapseNotes" aria-expanded="false" aria-controls="collapseNotes">
+                                    Notes
+                                </button>
+                                
+                                <div class="collapse" id="collapseNotes">
+                                    
+                                </div>
+                </div>
+                
+            </div> <!-- Row End -->
             <!-- Sidebar End -->
             <!-- Main Page Content -->
-            <div class="mainContent p-2 d-flex flex-column border " style="height: 100%; min-width: 85%;"></div>
+            <div class="mainContent p-2 d-inline-flex flex-column " style="height: 100%; min-width: 75%;"></div>
             <!-- Main Page Content End -->
-        </div>
+        </div> 
 </body>
 
 <scripts>
@@ -96,6 +82,7 @@
     <script src="mainJS.js"></script>
     <script src="dashboardJS.js"></script>
     <script src="notesCategoriesJS.js"></script>
+    <script src="displayPageJS.js"></script>
 
     <!-- For bootstrap table -->
     <script src="../node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>

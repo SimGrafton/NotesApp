@@ -21,7 +21,7 @@ function AddDataHTML(html)
 	// Meeds to dynamically count child elements of mainContent
 	var count = $(".mainContent").children().length;
 
-    $(`.mainContent`).append(`<div class="data${count + 1} d-flex justify-content-center p-1">${html}</div>`);
+    $(`.mainContent`).append(html);
 }
 
 // Refresh the content in the boxes on the main index page
