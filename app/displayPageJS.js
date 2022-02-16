@@ -7,7 +7,12 @@ async function DisplayContent(category, subCategory, FinalCategory){
 
         AddDataHTML(`<h3 class="d-flex justify-content-center font-weight-bold p-5">${category } > ${subCategory} > ${FinalCategory}</h3>`);
 
+
         AddDataHTML(`<h5 class="text-left ml-3">Info:</h5>`);
+
+        // Add edit button
+        AddDataHTML(``)
+
         AddDataHTML(`<div class="d-flex justify-content-center p-1 ml-3 mb-5">${response["Info"]}</div>`);
         AddDataHTML(`<h5 class="text-left ml-3">Code:</h5>`);
         AddDataHTML(`<div class="d-flex justify-content-center p-1 ml-3">${response["Code"]}</div>`);

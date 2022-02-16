@@ -19,11 +19,15 @@ ctrl + r from within app or view -> reload
 
 -- To do --
 
-1-Feature. Add page for opening category. This should display the subcategories along the left-hand side and display
-Need to change sidebar so can add sub dropdowns
-Need to add id's to the final categories so that I can reference them
-Need to have it open the page
-2-Feature. Add new category
+
+2-Feature. 
+Enable edit of text, 
+saving new. 
+Get rid of code section, just have info section but allow to display code section so that I can move it. Have alert.
+There should be features at the top of the page, for edit, add picture, add code, add new, delete category.
+
+
+Add new category
 3-Feature. Delete Category 
 4-Feature. Format the return values so that it looks like a blog page.
 
