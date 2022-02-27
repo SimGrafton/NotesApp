@@ -57,8 +57,16 @@ app.on('ready', function () {
     mainWindow.close(); 
   })
 
+  // max button
+  ipcMain.on('max', () => {
+    mainWindow.maximize(); 
+  })
+
+  // reload button
+  ipcMain.on('reload', () => {
+    mainWindow.reload(); 
+  })
+
 })
 
 app.on('window-all-closed', () => { app.quit() })
-
-

@@ -38,13 +38,20 @@
                     </li>
                 </ul>                
             </div>
+            <!-- Icons utility bar on top right -->
+            <button class="reloadBtn btn" id="rBtn" style="-webkit-app-region: no-drag; ">
+                <img src="icons/refresh.png" width="20" />
+            </button>
+            <button class="maxBtn btn" style="-webkit-app-region: no-drag; ">
+                <img src="icons/maximize.png" width="20" />
+            </button>
             <button type="button" class="minBtn btn" aria-label="Minimise" style="-webkit-app-region: no-drag">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-dash-lg" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z"/>
                   </svg>
             </button>
             <button type="button" class="closeBtn btn-close btn-close-white" aria-label="Close" style="-webkit-app-region: no-drag"></button>
-
+            <!-- End of icons utility bar on top right -->
         </nav>
         <!-- NavBar End -->
     </header>
@@ -68,6 +75,38 @@
             <div class="mainContent p-2 d-inline-flex flex-column " style="height: 100%; min-width: 75%;"></div>
             <!-- Main Page Content End -->
         </div> 
+
+        <div id="menu">
+            <a href="#" id="btnEditContextMenu">
+              <img src="icons/icons8-edit-50.png" /><div id="editCategory"></div>
+            </a>
+            <a href="#">
+              <img src="icons/icons8-delete-24.png" /><div id="deleteCategory"></div>
+              <!-- <img src="icons/icons8-delete-24.png" /> Delete <span>Ctrl + ?!</span> -->
+            </a>
+            <a href="#" style="visibility:hidden;" id="addFinalCategoryBox">
+                <img src="icons/add.png" /><div id="addFinalCategory"></div>
+            </a>
+            <a href="#" class="inspectElement">
+                <img src="icons/add.png" />Inspect Element
+            </a>
+            <a href="#" class="reorderUp">
+                <img src="icons/add.png" />Reorder Up
+            </a>
+            <a href="#" class="reorderDown">
+                <img src="icons/add.png" />Reorder Down
+            </a>
+
+
+
+            <!-- <hr />
+            <a href="#">
+              <i class="fa fa-fort-awesome"></i> Fort Awesome <span>Ctrl + ?!</span>
+            </a>
+            <a href="#">
+              <i class="fa fa-flag"></i> Font Awesome <span>Ctrl + ?!</span>
+            </a> -->
+          </div>
 </body>
 
 <scripts>
@@ -83,6 +122,7 @@
     <script src="dashboardJS.js"></script>
     <script src="notesCategoriesJS.js"></script>
     <script src="displayPageJS.js"></script>
+    <script src="editJsonJS.js"></script>
 
     <!-- For bootstrap table -->
     <script src="../node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
