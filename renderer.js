@@ -17,3 +17,13 @@ $('.minBtn').on('click', e => {
 $('.closeBtn').on('click', e => {
     ipc.send('close');
   })
+
+// Full Screen button
+$(`.maxBtn`).on(`click`, e => {
+    ipc.send(`max`); 
+  })
+
+// Reload app button
+$(`.reloadBtn`).on(`click`, e => {
+  ipc.send(`reload`); 
+})
