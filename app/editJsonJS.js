@@ -20,7 +20,7 @@ async function EditCategoryNameInJson(newCategoryName){
     // Update the JSON file
     await UpdateJsonFile(parsedNotes).then(function(status){
         if(status){
-            ReconstructJson();
+            ReconstructJson("Edit Category");
         }
         else{
             console.log("Unknown Error in writing to json file"); 
@@ -50,7 +50,7 @@ async function UpdateJsonFile(updatedJson){
 	})
 }; 
 
-async function ReconstructJson()
+async function ReconstructJson(action)
 {
     let numberCheck = 0; 
     let newBuild = {};
@@ -95,16 +95,34 @@ async function ReconstructJson()
 
     }
 
-
-    if(numberCheck != globalCategoryNumberCheck){
-        console.log(JSON.stringify(newBuild).length);
-        console.log(JSON.stringify(parsedNotes).length);
-        return alert(`Count of categories before move (${globalCategoryNumberCheck}) and after move (${numberCheck})are not equal, change has not been made`);
-    }
-    else{
-        //Update the json
+    if(action != "delete")
+    {
+        if(numberCheck != globalCategoryNumberCheck){
+            console.log(JSON.stringify(newBuild).length);
+            console.log(JSON.stringify(parsedNotes).length);
+            return alert(`Count of categories before move (${globalCategoryNumberCheck}) and after move (${numberCheck})are not equal, change has not been made`);
+        }
+        else{
+            //Update the json
+            await UpdateJsonFile(newBuild).then(function(){
+    
+                let type = globalCategoryType;
+                let catID = globalCategoryID;
+                let subCatID = globalSubCategoryID; 
+    
+                LoadCategoriesIntoSidebar();
+                
+                setTimeout(function()
+                {
+                    OpenPreviousCategoryLocation(type, catID, subCatID);
+                }, 300);
+    
+            }); 
+        }
+    } else
+    {
         await UpdateJsonFile(newBuild).then(function(){
-
+    
             let type = globalCategoryType;
             let catID = globalCategoryID;
             let subCatID = globalSubCategoryID; 
@@ -118,7 +136,6 @@ async function ReconstructJson()
 
         }); 
     }
-    
     
     
 }
@@ -158,4 +175,36 @@ function FindSubCategoryByNumber(num, global, parent)
             
         }
     }
+}
+
+function DeleteCategoryFromJson()
+{
+    if(globalCategoryType == "category")
+    {
+        delete globalCategoryMap[globalID];
+        ReOrderGlobalMaps(globalCategoryMap); 
+    }
+
+    if(globalCategoryType == "subCategory")
+    {
+        delete globalSubCategoryMap[globalID];
+        ReconstructJson("delete"); 
+    }
+
+    if(globalCategoryType == "finalCategory")
+    {
+        delete globalFinalCategoryMap[globalID];
+        ReconstructJson("delete"); 
+    }
+
+}
+
+function ReOrderGlobalMaps(global)
+{
+    for(let i = 0; i < Object.keys(global).length; i++)
+    {
+        global[Object.keys(global)[i]].numbering = i;
+    }
+
+    ReconstructJson("delete"); 
 }
