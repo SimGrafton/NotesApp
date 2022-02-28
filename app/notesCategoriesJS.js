@@ -19,6 +19,7 @@ var globalCategoryID;
 var globalSubCategoryID;
 var globalFinalCategoryID;
 var globalCategoryType; 
+var globalCategoryName;
 
 var globalCategoryNumberCheck; 
 
@@ -162,6 +163,7 @@ function RefreshGlobals()
     globalSubCategoryID = "";
     globalFinalCategoryID = "";
     globalCategoryType = ""; 
+    globalCategoryName = "";
 
 }
 
@@ -174,47 +176,56 @@ function DisplayContextMenu(e){
     e.preventDefault();
 
     // Get the details from the globalMap
-    let current = globalCategoryMap[this.id];
-    if(current == undefined){
-        current = globalSubCategoryMap[this.id];
-    }
-    if(current == undefined){
-        current = globalFinalCategoryMap[this.id];
-    }
+    let current;
+    let typeArray = [
+        globalCategoryMap[this.id],
+        globalSubCategoryMap[this.id],
+        globalFinalCategoryMap[this.id],
+    ];
 
     // Set global type for future reference
-    globalID = this.id; 
-    globalCategoryType = current.categoryType
+    for(let i of typeArray){
+        if(i != undefined){
+            current = i;
+            globalCategoryType = current.categoryType; 
+            break;
+        }
+    }; 
 
-    if(current.categoryType == "category")
+    // Set global type for future reference
+    globalID = this.id;     
+
+    if(globalCategoryType == "category")
     {
         // Set globals
         globalCategoryID = this.id;
 
-        // Show add subcategory option
-        
-        
+        globalCategoryName = globalCategoryMap[globalID].categoryName;
 
-    } else if (current.categoryType == "subCategory")
+        // Show add subcategory option
+        // TO DO
+    } else if (globalCategoryType == "subCategory")
     {
         // Set globals
         globalCategoryID = current.parentCategoryID;
         globalSubCategoryID = this.id; 
 
+        globalCategoryName = globalSubCategoryMap[globalID].categoryName;
+
         // Show options needed 
         $("#addFinalCategoryBox").attr(`style`,"visibility:visible;");
 
         // Add labels to context menu
-        $(`#addFinalCategory`).html(`Add new category to "${this.value}"`); 
-        
-    } else if(current.categoryType == "finalCategory")
+        $(`#addFinalCategory`).html(`Add new category to "${this.value}"`);
+    } else if (globalCategoryType == "finalCategory")
     {
         // Set globals
         globalCategoryID = current.parentParentCategoryID;
         globalSubCategoryID = current.parentCategoryID;
         globalFinalCategoryID = this.id;
-        
-    }; 
+
+        globalCategoryName = globalFinalCategoryMap[globalID].categoryName;
+    }           
 
     // Add labels to context menu
     $(`#editCategory`).html(`Edit category name "${this.value}"`); 
@@ -226,21 +237,27 @@ function DisplayContextMenu(e){
     $(`#btnEditContextMenu`).click(EnableEditCategoryName); 
 
     // Add event listender to delete button
-    // TO DO
+    $(`#deleteCategory`).click(DeleteCategory); 
 
     // Add event listener to inspect button
     $(`.inspectElement`).click(ConsoleLogHTML); 
 
     // Add event listener to reorder button
-    $(`.reorderDown`).click(function(){
-        ReorderCategoriesDown();
-        e.stopPropagation()
-    }); 
+    $(`.reorderDown`).click(ReorderCategoriesDown);
     $(`.reorderUp`).click(ReorderCategoriesUp); 
 
 
     globalCategoryNumberCheck = Object.keys(globalCategoryMap).length + Object.keys(globalSubCategoryMap).length + Object.keys(globalFinalCategoryMap).length;
 
+}
+
+function DeleteCategory()
+{
+
+    if(confirm(`are you sure you want to delete category ${globalCategoryName}?`)){
+        DeleteCategoryFromJson();
+    }; 
+    
 }
 
 function ReorderCategoriesDown()
@@ -284,36 +301,50 @@ function ReorderCategoriesDown()
         alert("Cannot lower as entry is bottom of list");
     }
     
-    
 }
 
 function ReorderCategoriesUp()
 {
 
-    console.log(globalCategoryType);
-    let type;
+    let global;
+    let catLength; 
     switch(globalCategoryType) {
         case "category":
-            type = globalCategoryMap; 
+            global = globalCategoryMap;
+            catLength = Object.keys(globalCategoryMap).length;  
             break;
         case "subCategory":
-            type = globalSubCategoryMap; 
+            global = globalSubCategoryMap; 
+            catLength = globalCategoryMap[globalSubCategoryMap[globalID].parentCategoryID].subCategoryIDs.length;
             break;
         case "finalCategory":
-            type = globalFinalCategoryMap; 
+            global = globalFinalCategoryMap; 
+            catLength = globalSubCategoryMap[globalFinalCategoryMap[globalID].parentCategoryID].subCategoryIDs.length;
             break;
         default:
               // code block
     }
 
-    // decrement current number category 
-    l
+    
+    let numToChangeTo = global[globalID].numbering - 1; 
+    if(numToChangeTo >= 0){
 
-    // increment new number category
-    type.numbering -= 1;
+        // decrement current number category 
+        let oldNbr = Object.keys(global).indexOf(globalID);
+        let old = Object.keys(global)[oldNbr - 1];
 
-    // Recreate json file
-    //ReconstructJson();
+        global[old].numbering = global[old].numbering + 1;
+    
+        // increment previous
+        global[globalID].numbering = global[globalID].numbering - 1; 
+
+        // Recreate json file
+        ReconstructJson();
+
+    }
+    else{
+        alert("Cannot raise as entry is top of list");
+    }
     
 }
 
@@ -454,9 +485,7 @@ if (document.addEventListener) {
     i.opacity = "0";
     setTimeout(function() {
       i.visibility = "hidden";
-      $(`.reorderDown`).off(); // This prevents multiple EL's being added to this id
-      $(`.reorderUp`).off(); // This prevents multiple EL's being added to this id
-      $(`#btnEditContextMenu`).off(); // This prevents multiple EL's being added to this id
+      RemoveEventListeners(); 
     }, 501);
   }, false);
 } else {
@@ -470,9 +499,6 @@ if (document.addEventListener) {
     i.opacity = "0";
     setTimeout(function() {
       i.visibility = "hidden";
-      $(`.reorderDown`).off(); // This prevents multiple EL's being added to this id
-      $(`.reorderUp`).off(); // This prevents multiple EL's being added to this id
-      $(`#btnEditContextMenu`).off(); // This prevents multiple EL's being added to this id
     }, 501);
   });
 }
@@ -488,4 +514,13 @@ function menu(x, y) {
 
 function ConsoleLogHTML(){
     console.log($(`#${globalID}`));
+}
+
+function RemoveEventListeners()
+{
+    $(`.reorderDown`).off(); // This prevents multiple EL's being added to this id
+    $(`.reorderUp`).off(); // This prevents multiple EL's being added to this id
+    $(`#btnEditContextMenu`).off(); // This prevents multiple EL's being added to this id
+    $(`#deleteCategory`).off();
+    $(`.inspectElement`).off(); 
 }

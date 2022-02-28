@@ -8,9 +8,8 @@ async function DisplayContent(category, subCategory, FinalCategory){
         // Add Title + Edit Name + Delete + Add new category
         AddDataHTML(`<h3 class="d-flex justify-content-center font-weight-bold p-5">${category} > ${subCategory} > ${FinalCategory}</h3>`);
 
-        // Add icon header and edit button
-        AddDataHTML(`<div><h5 class="text-left ml-3" style="float:left;">Info:</h5><input type="image" src="icons/icons8-edit-50.png" 
-        name="saveForm" class="btnEdit" id="btnEdit" style="height:15px; width:15px; float:right;"/></div>`);
+        // Add icon header
+        AddDataHTML(`<div><h5 class="text-left ml-3" style="float:left;">Info:</h5></div>`);
 
         AddDataHTML(`<div class="infoBox d-flex justify-content-center p-1 ml-3 mb-5">${response["Info"]}</div>`);
         AddDataHTML(`<h5 class="text-left ml-3">Code:</h5>`);
@@ -18,8 +17,8 @@ async function DisplayContent(category, subCategory, FinalCategory){
 
         //<div class="d-flex justify-content-center p-1">${html}</div>
 
-        // Edit button event listener
-        $(`#btnEdit`).click(EditInfo); 
+        // text context menu event listener
+        $(`.infoBox`).contextmenu(DisplayContextMenu); 
 
     });
 }
