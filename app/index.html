@@ -7,12 +7,6 @@
         <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="dashboard.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-        <!-- For bootstrap table -->
-        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.19.1/dist/bootstrap-table.min.css">
-
-        <!-- For bootstrap datepicker -->
-        <link href='../node_modules/jquery-ui-dist/jquery-ui.min.css' rel='stylesheet' type='text/css'>
     </css>  
     <title>NotesApp</title>
 </head>
@@ -60,7 +54,7 @@
             <!-- Sidebar -->
                 <div class="sidebar d-inline-flex flex-column flex-shrink-0 pb-1 bg-light" style="min-width:180px; max-width:180px;">
                                 
-                                <button class="btn btn-outline-primary mb-2 ml-2 mt-3 w-75" type="button" data-toggle="collapse" data-target="#collapseNotes" aria-expanded="false" aria-controls="collapseNotes">
+                                <button class="btn btnCategoryHeader btn-outline-primary mb-2 ml-2 mt-3 w-75" type="button" data-toggle="collapse" data-target="#collapseNotes" aria-expanded="false" aria-controls="collapseNotes">
                                     Notes
                                 </button>
                                 
@@ -77,41 +71,13 @@
         </div> 
 
         <div id="menu">
-            <a href="#" id="btnEditContextMenu">
-              <img src="icons/icons8-edit-50.png" /><div id="editCategory"></div>
-            </a>
-            <a href="#">
-              <img src="icons/icons8-delete-24.png" /><div id="deleteCategory"></div>
-              <!-- <img src="icons/icons8-delete-24.png" /> Delete <span>Ctrl + ?!</span> -->
-            </a>
-            <a href="#" style="visibility:hidden;" id="addFinalCategoryBox">
-                <img src="icons/add.png" /><div id="addFinalCategory"></div>
-            </a>
-            <a href="#" class="inspectElement">
-                <img src="icons/add.png" />Inspect Element
-            </a>
-            <a href="#" class="reorderUp">
-                <img src="icons/add.png" />Reorder Up
-            </a>
-            <a href="#" class="reorderDown">
-                <img src="icons/add.png" />Reorder Down
-            </a>
-
-
-
-            <!-- <hr />
-            <a href="#">
-              <i class="fa fa-fort-awesome"></i> Fort Awesome <span>Ctrl + ?!</span>
-            </a>
-            <a href="#">
-              <i class="fa fa-flag"></i> Font Awesome <span>Ctrl + ?!</span>
-            </a> -->
-          </div>
+            
+            
+        </div>
 </body>
 
 <scripts>
     
-
     <!-- normal script imports etc  -->
     <script src="otherjs.js"></script>
     <script src="../node_modules/commonjs/lib/system.js"></script>
@@ -123,13 +89,6 @@
     <script src="notesCategoriesJS.js"></script>
     <script src="displayPageJS.js"></script>
     <script src="editJsonJS.js"></script>
-
-    <!-- For bootstrap table -->
-    <script src="../node_modules/bootstrap-table/dist/bootstrap-table.min.js"></script>
-
-    <!-- For bootstrap datepicker -->
-    <script src='../node_modules/jquery-ui-dist/jquery-ui.min.js' type='text/javascript'></script>
-
     
 </scripts>
 </html>
