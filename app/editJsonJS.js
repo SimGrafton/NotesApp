@@ -74,16 +74,25 @@ async function ReconstructJson(action)
                 // Now get the final categories in order
                 // Need to get the number of finalcategories within the current subcategory. subcategoryIDs is within globalSubCategoryMap[], 
                 // the current subcategoryid is subCategory[1]. So globalSubCategoryMap[subCategory1][subCategoryIDs].length
-                let finalCategoriesWithinSubCategory = globalSubCategoryMap[subCategory[1]]; 
+                let finalCategoriesWithinSubCategory = globalSubCategoryMap[subCategory[1]];
                 
                 for (let k = 0; k < finalCategoriesWithinSubCategory.subCategoryIDs.length; k++) {
+
 
                     let finalCategory = FindSubCategoryByNumber(k, globalFinalCategoryMap, subCategory[1]);
 
                     if(finalCategory != undefined)
                     {
                         newBuild[category[2]][subCategory[2]][finalCategory[2]] = parsedNotes[category[0]][subCategory[0]][finalCategory[0]];
+
+                        // If it's a new final category it wont appear in parsedNotes so need to add a blank {} in place
+                        if(parsedNotes[category[0]][subCategory[0]][finalCategory[0]] == undefined)
+                        {
+                            newBuild[category[2]][subCategory[2]][finalCategory[2]] = {}; 
+                        }
+
                         numberCheck += 1; 
+
                     }
                     
 
@@ -95,7 +104,7 @@ async function ReconstructJson(action)
 
     }
 
-    if(action != "delete")
+    if(action != "delete" && action != "adding" )
     {
         if(numberCheck != globalCategoryNumberCheck){
             console.log(JSON.stringify(newBuild).length);
@@ -161,6 +170,7 @@ function FindSubCategoryByNumber(num, global, parent)
 {
     for (let i in global)
     {
+
         // needs to check the parentCategory too
         if(global[i].numbering == num && global[i].parentCategoryID == parent)
         {
@@ -207,4 +217,92 @@ function ReOrderGlobalMaps(global)
     }
 
     ReconstructJson("delete"); 
+}
+
+function AddNewCategoryToJson(newName)
+{
+
+    if(globalCategoryType == "topCategory")
+    {
+            let category = newName;
+            let categoryID = `${RemoveSpaces(category)}${1000000}`;
+            number = Object.keys(globalCategoryMap).length; 
+
+            // Add entry to globalMap
+            globalCategoryMap[categoryID] = {
+                categoryName: category,
+                categoryType : "category",
+                subCategoryIDs :[],
+                numbering : number
+            }; 
+
+            // Add entry to globalNameMap
+            globalNameMap[category] = {
+                categoryID: categoryID,
+                categoryType : "category",
+                numbering : number
+            }; 
+
+            ReconstructJson("adding");
+
+    }
+
+    if(globalCategoryType == "category")
+    {
+
+        // Needs to add to subcategories of this and needs to add to subcategoriesmap
+
+        let subCategory = newName;
+        let subCategoryID = `${RemoveSpaces(newName)}${100000}`;
+        let number = globalCategoryMap[globalID].subCategoryIDs.length;
+
+        globalCategoryMap[globalID].subCategoryIDs.push(subCategoryID);
+
+        // Add entry to globalMap
+        globalSubCategoryMap[subCategoryID] = {
+            categoryName: subCategory,
+            categoryType : "subCategory",
+            subCategoryIDs :[],
+            parentCategoryID : globalID, 
+            numbering : number
+        }; 
+
+        globalNameMap[subCategory] = {
+            categoryID: subCategoryID,
+            categoryType : "subCategory",
+            numbering : number
+        }; 
+
+        ReconstructJson("adding");
+
+    }
+
+    if(globalCategoryType == "subCategory")
+    {
+        let finalCategory = newName;
+        let finalCategoryID = `${RemoveSpaces(finalCategory)}${1000000}`;
+        let number = globalSubCategoryMap[globalID].subCategoryIDs.length;
+
+        globalSubCategoryMap[globalID].subCategoryIDs.push(finalCategoryID);
+
+        // Add entry to globalMap
+        globalFinalCategoryMap[finalCategoryID] = {
+            categoryName: finalCategory,
+            categoryType: "finalCategory",
+            parentCategoryID: globalID,
+            parentParentCategoryID: globalSubCategoryMap[globalID].parentCategoryID,
+            numbering: number
+        };
+
+        globalNameMap[finalCategory] = {
+            categoryID: finalCategoryID,
+            categoryType: "finalCategory",
+            numbering: number
+        };
+
+        ReconstructJson("adding");
+    
+    }
+
+
 }
