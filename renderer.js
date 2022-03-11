@@ -6,6 +6,8 @@ window.Bootstrap = require('bootstrap')
 
 const ipc = require('electron').ipcRenderer;
 
+var globalWindowSize; 
+
 
 // Messages to main
 // Minimise Button
@@ -27,3 +29,18 @@ $(`.maxBtn`).on(`click`, e => {
 $(`.reloadBtn`).on(`click`, e => {
   ipc.send(`reload`); 
 })
+
+function GetWindowSize()
+{
+  ipc.send(`getSize`); 
+}
+
+ipc.on('asynchronous-message', function (evt, message) {
+  globalWindowSize = message; 
+});
+
+function FocusWindow()
+{
+  console.log("focussing");
+  ipc.send(`focusWindow`); 
+}

@@ -67,6 +67,16 @@ app.on('ready', function () {
     mainWindow.reload(); 
   })
 
+  // GetSize
+  ipcMain.on('getSize', () => {
+    mainWindow.webContents.send('asynchronous-message', mainWindow.getSize());
+  })
+
+  // Focus on main window
+  ipcMain.on('focusWindow', () => {
+    mainWindow.focus(); 
+  })
+
 })
 
 app.on('window-all-closed', () => { app.quit() })

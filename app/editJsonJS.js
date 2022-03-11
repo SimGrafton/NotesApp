@@ -83,13 +83,18 @@ async function ReconstructJson(action)
 
                     if(finalCategory != undefined)
                     {
-                        newBuild[category[2]][subCategory[2]][finalCategory[2]] = parsedNotes[category[0]][subCategory[0]][finalCategory[0]];
-
                         // If it's a new final category it wont appear in parsedNotes so need to add a blank {} in place
                         if(parsedNotes[category[0]][subCategory[0]][finalCategory[0]] == undefined)
                         {
-                            newBuild[category[2]][subCategory[2]][finalCategory[2]] = {}; 
+                            
+                            newBuild[category[2]][subCategory[2]][finalCategory[2]] = {"Info":"Henwo"}; 
+                            console.log(newBuild); 
+                            
+                        }else{
+                            newBuild[category[2]][subCategory[2]][finalCategory[2]] = parsedNotes[category[0]][subCategory[0]][finalCategory[0]];
                         }
+
+                        
 
                         numberCheck += 1; 
 
@@ -119,12 +124,12 @@ async function ReconstructJson(action)
                 let catID = globalCategoryID;
                 let subCatID = globalSubCategoryID; 
     
-                LoadCategoriesIntoSidebar();
+                // LoadCategoriesIntoSidebar();
                 
-                setTimeout(function()
-                {
-                    OpenPreviousCategoryLocation(type, catID, subCatID);
-                }, 300);
+                // setTimeout(function()
+                // {
+                //     OpenPreviousCategoryLocation(type, catID, subCatID);
+                // }, 300);
     
             }); 
         }
@@ -136,12 +141,12 @@ async function ReconstructJson(action)
             let catID = globalCategoryID;
             let subCatID = globalSubCategoryID; 
 
-            LoadCategoriesIntoSidebar();
+            // LoadCategoriesIntoSidebar();
             
-            setTimeout(function()
-            {
-                OpenPreviousCategoryLocation(type, catID, subCatID);
-            }, 300);
+            // setTimeout(function()
+            // {
+            //     OpenPreviousCategoryLocation(type, catID, subCatID);
+            // }, 300);
 
         }); 
     }
@@ -304,5 +309,36 @@ function AddNewCategoryToJson(newName)
     
     }
 
+
+}
+
+function EditContent(newContent)
+{
+    // Set number before edit
+    globalCategoryNumberCheck = Object.keys(globalCategoryMap).length + Object.keys(globalSubCategoryMap).length + Object.keys(globalFinalCategoryMap).length;
+
+    // Add to parsed Notes
+    let category = globalCategoryMap[globalContentCategoryID].categoryName;
+    let subCategory = globalSubCategoryMap[globalContentSubCategoryID].categoryName;
+    let finalCategory = globalFinalCategoryMap[globalContentFinalCategoryID].categoryName;
+
+    // THIS WILL NOT WORK FOR MULTIPLE PARAGRAPHS, SO EACH PARAGRAPH NEEDS A UNIQUE TITLE
+    parsedNotes[category][subCategory][finalCategory][`${globalDivCategory}`] = newContent;
+
+    ReconstructJson(); 
+
+}
+
+function AddNewCategoryToJson()
+{
+    // Needs to reconstruct the content so that it's in place
+    let category = globalCategoryMap[globalContentCategoryID].categoryName;
+    let subCategory = globalSubCategoryMap[globalContentSubCategoryID].categoryName;
+    let finalCategory = globalFinalCategoryMap[globalContentFinalCategoryID].categoryName;
+
+    for(let i in parsedNotes[category][subCategory][finalCategory])
+    {
+        // THIS NEEDS A 
+    }
 
 }

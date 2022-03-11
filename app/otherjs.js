@@ -36,3 +36,26 @@ function OutputError(text)
 {
     AddDataHTML(`User Selection invalid error: ${text}`); 
 }
+
+function OpenAtLocation(location, id)
+{
+    if(location == "category")
+    {
+
+    }
+
+    if(location == "subCategory")
+    {
+        
+    }
+
+    if(location == "finalCategory")
+    {
+        
+    }
+
+    if(location == "div")
+    {
+        
+    }
+}

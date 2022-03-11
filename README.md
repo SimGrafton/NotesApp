@@ -20,7 +20,14 @@ ctrl + r from within app or view -> reload
 -- To do --
 
 
-5-feature. Adding and saving new category.
+4-feature. Edit text. I'd like it so that when you do something like add a category or update text, that the screen
+instantly makes the change and then in the background the update to the JSON happens. This will mean that eventlisteners
+will need to be added, but I think as part of this it will make sense to clean the work up and have a function for 
+adding a subcategory or finalcategory, which will handle adding the event listeners, or possibly so all the el's are
+on classes. 
+
+Commit message- "fixed bug where context menu would appear below the browserwindow (added ipcmain and ipcrenderer
+processes to achieve.) Added in add new section which needs further work to enable dynamic section adding and moving"
 
 Get rid of code section, just have info section but allow to display code section so that I can move it. Have alert.
 There should be features at the top of the page, for edit, add picture, add code, add new, delete category.
@@ -47,11 +54,12 @@ these options display on page and on right click.
 4-feature. Editing text
 7-feature. Format the return values so that it looks like a blog page.
 
-1-bug. When you click the menu on the bottom entries, it opens up out of clickable range, need to check if its on
-screen and if not then position it higher up. Would be useful to have the position of the window size anyway. 
+1-bug. There seems to be an issue with adding a category name with a period in it. 
 
 Future:
 1. Enable pictures to be included.
+
+
 
 -- End of To do --
 

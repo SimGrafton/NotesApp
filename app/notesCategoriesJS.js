@@ -136,18 +136,24 @@ async function LoadCategoriesIntoSidebar()
         }
 
         // Event Listeners
-        $(`.category`).contextmenu(DisplayContextMenu); 
-
-        $(`.subCategory`).contextmenu(DisplayContextMenu); 
-
-        $(`.finalCategory`).click(DisplayCategoryPage); 
-
-        $(`.finalCategory`).contextmenu(DisplayContextMenu); 
-
-        $(`.btnCategoryHeader`).contextmenu(DisplayHeaderContextMenu); 
+        AddCategoryEventListeners(); 
 
     })
 
+}
+
+function AddCategoryEventListeners()
+{
+
+    $(`.category`).contextmenu(DisplayContextMenu); 
+
+    $(`.subCategory`).contextmenu(DisplayContextMenu); 
+
+    $(`.finalCategory`).click(DisplayCategoryPage); 
+
+    $(`.finalCategory`).contextmenu(DisplayContextMenu); 
+
+    $(`.btnCategoryHeader`).contextmenu(DisplayHeaderContextMenu);
 }
 
 function RefreshGlobals()
@@ -171,9 +177,18 @@ function RefreshGlobals()
 
 function DisplayContextMenu(e){
 
+    GetWindowSize(); 
+
     // Set position of menu to mouse click
     var posX = e.clientX;
     var posY = e.clientY;
+
+    if(globalWindowSize != undefined){
+        if(globalWindowSize[1] - e.clientY < 200 ){
+            posY = globalWindowSize[1] - 250; 
+        }
+    }
+
     $(`#menu`).html(""); // refresh the context menu
     menu(posX, posY);
     e.preventDefault();
@@ -235,21 +250,21 @@ function DisplayContextMenu(e){
     } 
 
    
-    $(`#menu`).append(`<a href="#" id="btnEditContextMenu"><img src="icons/icons8-edit-50.png" /><div id="editCategory"></div></a>`);
-    $(`#menu`).append(`<a href="#"><img src="icons/icons8-delete-24.png" /><div id="deleteCategory"></div></a>`);
+    $(`#menu`).append(`<a href="#" class="btnEditContextMenu"><img src="icons/icons8-edit-50.png" /><div class="editCategory"></div></a>`);
+    $(`#menu`).append(`<a href="#"><img src="icons/icons8-delete-24.png" /><div class="deleteCategory"></div></a>`);
     $(`#menu`).append(`<a href="#" class="inspectElement"><img src="icons/add.png" />Inspect Element</a>`);
     $(`#menu`).append(`<a href="#" class="reorderUp"><img src="icons/add.png" />Reorder Up</a>`);
     $(`#menu`).append(`<a href="#" class="reorderDown"><img src="icons/add.png" />Reorder Down</a>`); 
 
     // Add labels to context menu
-    $(`#editCategory`).html(`Edit category name "${this.value}"`); 
-    $(`#deleteCategory`).html(`Delete category "${this.value}"`); 
+    $(`.editCategory`).html(`Edit category name "${this.value}"`); 
+    $(`.deleteCategory`).html(`Delete category "${this.value}"`); 
 
     // Add event listener to edit button
-    $(`#btnEditContextMenu`).click(EnableEditCategoryName); 
+    $(`.btnEditContextMenu`).click(EnableEditCategoryName); 
 
     // Add event listener to delete button
-    $(`#deleteCategory`).click(DeleteCategory); 
+    $(`.deleteCategory`).click(DeleteCategory); 
 
     // Add event listener to inspect button
     $(`.inspectElement`).click(ConsoleLogHTML); 
@@ -280,70 +295,117 @@ function DisplayHeaderContextMenu(e)
 
 function AddNewCategory()
 {
-
     // Add a new block with the text entry 
-    if(globalCategoryType == "topCategory")
-    {
-        // Needs to open up collapse notes - click the notes button?
-        $("#collapseNotes").append(`<textarea class="form-control p-0 mb-1" id="NewCategoryName" placeholder="Enter new category..." rows="1" style="min-width: 100px;"></textarea>
+
+    if ($(`#NewCategoryName`).html() == undefined) {
+        if (globalCategoryType == "topCategory") {
+            // Needs to open up collapse notes - click the notes button?
+            $("#collapseNotes").append(`<textarea class="form-control p-0 mb-1" id="NewCategoryName" placeholder="Enter new category..." rows="1" style="min-width: 100px;"></textarea>
             <button class="btn btn-primary btn-sm mb-2" id="submitEdit">Ok</button>
             <button class="reloadBtn btn btn-primary btn-sm mb-2" id="cancelEdit">Cancel</button>`);
 
-    }
+        }
 
-    if(globalCategoryType == "category")
-    {
-        $(`#subCategoriesOf${globalID}`).append(`<textarea class="form-control p-0 mb-1" id="NewCategoryName" placeholder="Enter new category..." rows="1" style="min-width: 100px;"></textarea>
+        if (globalCategoryType == "category") {
+            $(`#subCategoriesOf${globalID}`).append(`<textarea class="form-control p-0 mb-1" id="NewCategoryName" placeholder="Enter new category..." rows="1" style="min-width: 100px;"></textarea>
             <button class="btn btn-primary btn-sm mb-2" id="submitEdit">Ok</button>
             <button class="reloadBtn btn btn-primary btn-sm mb-2" id="cancelEdit">Cancel</button>`);
 
-    }
+        }
 
-    if(globalCategoryType == "subCategory")
-    {
+        if (globalCategoryType == "subCategory") {
 
-        $(`#finalCategoriesOf${globalID}`).append(`<textarea class="form-control p-0 mb-1" id="NewCategoryName" placeholder="Enter new category..." rows="1" style="min-width: 100px;"></textarea>
+            $(`#finalCategoriesOf${globalID}`).append(`<textarea class="form-control p-0 mb-1" id="NewCategoryName" placeholder="Enter new category..." rows="1" style="min-width: 100px;"></textarea>
             <button class="btn btn-primary btn-sm mb-2" id="submitEdit">Ok</button>
             <button class="reloadBtn btn btn-primary btn-sm mb-2" id="cancelEdit">Cancel</button>`);
+            $(`.NewCategoryName`).attr(`contenteditable`, true); 
 
+        }
+
+
+        if (globalCategoryType == "finalCategory") {
+            alert("Cannot add further subcategory");
+            CancelEdit();
+
+        }
+
+
+        // Add event listener to Ok
+        $(`#submitEdit`).click(function (e) {
+
+            let category = $(`#NewCategoryName`).val();
+
+            // Check category is not empty
+            if (category.length < 1) {
+                alert("Please enter text");
+
+                $(`#NewCategoryName`).remove();
+                $(`#submitEdit`).remove();
+                $(`#cancelEdit`).remove();
+
+                return;
+
+            }
+
+            AddNewCategoryToJson(category);
+
+            // Add the category to the category list
+            if (globalCategoryType == "topCategory") {
+
+                AddCategory(category, `${RemoveSpaces(category)}${1000000}`, `subCategoriesOf${categoryID}`);
+                globalCategoryType = "category";
+                globalID = `${RemoveSpaces(category)}${1000000}`;
+
+            } else if (globalCategoryType == "category") {
+
+                AddSubCategory(category, `${RemoveSpaces(category)}${100000}`, `subCategoriesOf${globalID}`, `finalCategoriesOf${RemoveSpaces(category)}${100000}`);
+                globalCategoryType = "subCategory";
+                globalID = `${RemoveSpaces(category)}${100000}`;
+
+            } else if (globalCategoryType == "subCategory") {
+
+                AddFinalCategory(category, `${RemoveSpaces(category)}${1000000}`, `finalCategoriesOf${globalID}`);
+                globalCategoryType = "finalCategory";
+                globalID = `${RemoveSpaces(category)}${10000}`;
+            }
+
+            $(`#NewCategoryName`).remove();
+            $(`#submitEdit`).remove();
+            $(`#cancelEdit`).remove();
+
+            // Add event listeners
+            AddCategoryEventListeners();
+
+            // This prevents the event from bubbling
+            e.stopPropagation();
+        })
+
+        // Add event listener to cancel
+        $(`#cancelEdit`).click(function (e) {
+
+            $(`#NewCategoryName`).remove();
+            $(`#submitEdit`).remove();
+            $(`#cancelEdit`).remove();
+
+            // This prevents the event from bubbling, so that the parent button will not activate and therefore the page will not display when clicking
+            e.stopPropagation();
+        })
+    }
+    else{
+        
+        return console.log("Category already being added"); 
     }
 
-
-    if(globalCategoryType == "finalCategory")
-    {
-        alert("Cannot add further subcategory"); 
-        CancelEdit(); 
-
-    }
-
-
-    // Add event listener to Ok
-    $(`#submitEdit`).click(function(e){
-
-        AddNewCategoryToJson($(`#NewCategoryName`).val()); 
-
-        // This prevents the event from bubbling
-        e.stopPropagation();
-    })
-
-    // Add event listener to cancel
-    $(`#cancelEdit`).click(function(e){
-
-        CancelEdit(); 
-
-        // This prevents the event from bubbling, so that the parent button will not activate and therefore the page will not display when clicking
-        e.stopPropagation();
-    })
 
 };
 
-function DeleteCategory()
-{
+function DeleteCategory() {
 
-    if(confirm(`are you sure you want to delete category ${globalCategoryName}?`)){
+    if (confirm(`are you sure you want to delete category ${globalCategoryName}?`)) {
+        $(`#${globalID}`).remove();
         DeleteCategoryFromJson();
-    }; 
-    
+    };
+
 }
 
 function ReorderCategoriesDown()
@@ -453,6 +515,8 @@ function EnableEditCategoryName(){
     }
 
     // Replace the category name entry with a text box
+    let old = $(`#${globalID}`).html(); 
+
 
     $(`#${globalID}`).html(`<textarea class="form-control p-0 mb-1" id="NewCategoryName" rows="1" style="min-width: 100px;">${catName}</textarea>
     <button class="btn btn-primary btn-sm mb-2" id="submitEdit">Ok</button>
@@ -470,7 +534,7 @@ function EnableEditCategoryName(){
     // Add event listener to cancel
     $(`#cancelEdit`).click(function(e){
 
-        CancelEdit(); 
+        CancelEdit(`#${globalID}`, old); 
 
         // This prevents the event from bubbling, so that the parent button will not activate and therefore the page will not display when clicking
         e.stopPropagation();
@@ -478,36 +542,19 @@ function EnableEditCategoryName(){
 
 }
 
-async function CancelEdit(){
+async function CancelEdit(id, oldEntry){
 
-    // Refresh categories
-    await LoadCategoriesIntoSidebar().then(function(){
-        
-        OpenPreviousCategoryLocation(globalCategoryType, globalCategoryID, globalSubCategoryID); 
-    }); 
+    $(id).html(oldEntry); 
     
-}
-
-function OpenPreviousCategoryLocation(type, catID, subCatID)
-{
-    // Open previous location
-    if(type=="finalCategory"){
-        $(`#${catID}`).click();
-        $(`#${subCatID}`).click();
-    }
-    else if (type=="subCategory"){
-        $(`#${catID}`).click();
-        $(`#${subCatID}`).click();
-    }
 }
 
 // Gets the category names and uses function from displayPageJS.js
 function DisplayCategoryPage(){
 
-    let finalCat = this.value;
-    let subCat = this.parentElement.getAttribute("value");
-    let cat = this.parentElement.parentElement.getAttribute("value");
-    DisplayContent(cat, subCat, finalCat); 
+    globalFinalCategoryID = this.id;
+    globalSubCategoryID = globalFinalCategoryMap[globalFinalCategoryID].parentCategoryID; 
+    globalCategoryID = globalFinalCategoryMap[globalFinalCategoryID].parentParentCategoryID; 
+    DisplayContent(globalCategoryMap[globalCategoryID].categoryName, globalSubCategoryMap[globalSubCategoryID].categoryName , globalFinalCategoryMap[globalFinalCategoryID].categoryName); 
 
 }
 
