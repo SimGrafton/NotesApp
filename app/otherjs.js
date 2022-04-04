@@ -59,3 +59,11 @@ function OpenAtLocation(location, id)
         
     }
 }
+
+function RemoveNumberSuffix(string)
+{
+    let original = string.substr(0, string.length - 2);
+    let key = string.substr(string.length - 2);
+    key = key.replace(/[0-9]/g, '');
+    return original + key; 
+}

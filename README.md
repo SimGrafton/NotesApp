@@ -20,45 +20,31 @@ ctrl + r from within app or view -> reload
 -- To do --
 
 
-4-feature. Edit text. I'd like it so that when you do something like add a category or update text, that the screen
-instantly makes the change and then in the background the update to the JSON happens. This will mean that eventlisteners
-will need to be added, but I think as part of this it will make sense to clean the work up and have a function for 
-adding a subcategory or finalcategory, which will handle adding the event listeners, or possibly so all the el's are
-on classes. 
+4-feature. Edit text.
 
-Commit message- "fixed bug where context menu would appear below the browserwindow (added ipcmain and ipcrenderer
-processes to achieve.) Added in add new section which needs further work to enable dynamic section adding and moving"
+Commit message: 
+"Enabled edit of content sections. Fixed Bugs. Re-architectured how the application responds after a change is made.
 
-Get rid of code section, just have info section but allow to display code section so that I can move it. Have alert.
-There should be features at the top of the page, for edit, add picture, add code, add new, delete category.
+Content could not be edited, nor added to or deleted. System of content was either an info section or code section. 
+When you opened the context menu, if too low in the app then all options were not viewable. When the JSON file is edited,
+the app would display the changes without reloading from the json file, however, this created significantly increased 
+complexity when adding new data and if many entries were added then it got worse. 
 
+Content can now be edited and have implemented a system so that each bit of content has a unique name. Can now add
+paragraph sections, delete and edit them. When JSON changes are made, app now refreshes and reopens at the location.
+Added ipcmain and ipcrenderer processes to ensure context menu appears within browserwindow."
 
-3-feature. Adding more features to text. So should be able to read code and info, but then should have other boxes
-Each FinalCategory should have
-{
-    orderNum: 1,
-    mainText: ""
-}
+Current job
 
-but then can add any of the following. Each can then have it's own way of adding. Can then add more here as well. Have 
-these options display on page and on right click.
-
-{
-    paragraph: " ",
-    header: "",
-    image: " ",
-    code: " ",
-    link: " "
-}
-
-4-feature. Editing text
-7-feature. Format the return values so that it looks like a blog page.
+3-feature. Add more available content. Including images. Code. Headers. Links.
+5-feature. Format the return values so that it looks like a blog page.
 
 1-bug. There seems to be an issue with adding a category name with a period in it. 
+ 
 
 Future:
 1. Enable pictures to be included.
-
+2. Enable reorganise of content?
 
 
 -- End of To do --

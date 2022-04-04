@@ -1,41 +1,34 @@
-async function DisplayContent(category, subCategory, FinalCategory){
+async function DisplayContent(category, subCategory, finalCategory){
 
     // Open file
-    await GetContentFromFile(category, subCategory, FinalCategory).then(function(response){
+    await GetContentFromFile(category, subCategory, finalCategory).then(function(response){
 
         RefreshIndexData();
 
         // Add Title + Edit Name + Delete + Add new category
-        AddDataHTML(`<h3 class="d-flex justify-content-center font-weight-bold p-5">${category} > ${subCategory} > ${FinalCategory}</h3>`);
-
+        AddDataHTML(`<h3 class="pageTitle hasContentContext d-flex justify-content-center font-weight-bold p-5" id="${globalFinalCategoryID}Title">${category} > ${subCategory} > ${finalCategory}</h3>`);
 
         // TODO
-        // This will need to change to add an ID for each number down the list, so the first info will be info0, then might be a header1, info2, picture3 etc..
-        // Or possibly could have one class of info and another of the number? Or id is the number etc..
-        // Then needs to add them to the div in order they are in file. 
+        // Each section needs a unqique category name to be used as an identifier. Need to remove invalid characters and check no duplicates
 
         let num = 0;
         for(let i in response)
         {
             let section = Object.keys(response)[num]; 
 
-            AddDataHTML(`<div><h5 class="text-left ml-3" style="float:left;">${section}</h5></div>`);
+            AddDataHTML(`<h5 class="sectionHeader hasContentContext text-left ml-3" style="float:left;" id ="${section}Header123">${section}</h5>`);
 
-            if(section == "Info")
+            if(section.includes("11img11"))
             {
-                AddDataHTML(`<div class="infoBox d-flex justify-content-center p-1 ml-3 mb-5" id="${globalFinalCategoryID}${section}${num}">${response[i]}</div>`);
+                AddDataHTML(`<div class="img hasContentContext d-flex justify-content-center p-1 ml-3 mb-5" id="${globalFinalCategoryID}${section}${num}">${response[i]}</div>`);
             }
-
-            if(section == "Code")
+            else if(section.includes("11Header11"))
             {
-                AddDataHTML(`<div class="codeBox d-flex justify-content-center p-1 ml-3 mb-5" id="${globalFinalCategoryID}${section}${num}">${response[i]}</div>`);
-            }
-
-            if(section == "Header")
+                AddDataHTML(`<h5 class="header hasContentContext text-left ml-3" style="float:left;" id="${globalFinalCategoryID}${section}${num}">${response[i]}</h5>`);
+            } else
             {
-                AddDataHTML(`<div><h5 class="text-left ml-3" style="float:left;" id="${globalFinalCategoryID}${section}${num}">${response[i]}</h5></div>`);
+                AddDataHTML(`<p class="paragraph hasContentContext text-left ml-3" style="float:left;" id="${globalFinalCategoryID}${section}${num}">${response[i]}</p>`);
             }
-
 
             num += 1; 
         }
@@ -43,7 +36,7 @@ async function DisplayContent(category, subCategory, FinalCategory){
         //<div class="d-flex justify-content-center p-1">${html}</div>
 
         // text context menu event listener
-        $(`.infoBox`).contextmenu(DisplayContentContextMenu); 
+        $(`.hasContentContext`).contextmenu(DisplayContentContextMenu);
 
     });
 }

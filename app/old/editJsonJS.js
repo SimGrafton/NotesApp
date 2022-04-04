@@ -118,10 +118,7 @@ async function ReconstructJson(action)
     if(action != "delete" && action != "adding" )
     {
         if(numberCheck != globalCategoryNumberCheck){
-
-            alert(`Count of categories before move (${globalCategoryNumberCheck}) and after move (${numberCheck})are not equal, change has not been made`);
-            RefreshCategories(); 
-            return; 
+            return alert(`Count of categories before move (${globalCategoryNumberCheck}) and after move (${numberCheck})are not equal, change has not been made`);
         }
         else{
             //Update the json
@@ -130,8 +127,6 @@ async function ReconstructJson(action)
                 let type = globalCategoryType;
                 let catID = globalCategoryID;
                 let subCatID = globalSubCategoryID; 
-
-                RefreshCategories(); 
     
             }); 
         }
@@ -142,8 +137,6 @@ async function ReconstructJson(action)
             let type = globalCategoryType;
             let catID = globalCategoryID;
             let subCatID = globalSubCategoryID; 
-
-            RefreshCategories(); 
 
         }); 
     }
@@ -227,7 +220,6 @@ function ReOrderGlobalMaps(global)
 function AddNewCategoryToJson(newCategory, ID)
 {
 
-    // Add details to the global maps that are used to reconstruct json file
     if(globalCategoryType == "topCategory")
     {
             number = Object.keys(globalCategoryMap).length; 
@@ -306,105 +298,46 @@ function AddNewCategoryToJson(newCategory, ID)
 
 }
 
-async function EditContentInJson(newContent, originalHeader)
+function EditContent(newContent)
 {
-
     // Set number before edit
     globalCategoryNumberCheck = Object.keys(globalCategoryMap).length + Object.keys(globalSubCategoryMap).length + Object.keys(globalFinalCategoryMap).length;
 
-    // Get category names for relevant section
-    let category = globalCategoryMap[globalCategoryID].categoryName;
-    let subCategory = globalSubCategoryMap[globalSubCategoryID].categoryName;
-    let finalCategory = globalFinalCategoryMap[globalFinalCategoryID].categoryName;
+    // Add to parsed Notes
+    let category = globalCategoryMap[globalContentCategoryID].categoryName;
+    let subCategory = globalSubCategoryMap[globalContentSubCategoryID].categoryName;
+    let finalCategory = globalFinalCategoryMap[globalContentFinalCategoryID].categoryName;
 
-    // if header needs to edit key, else needs to edit the content
-    if(globalContentCategory == "sectionHeader")
-    {
-        // For this needs to reconstruct
-        let array = {}; 
-        let j = 0; 
-        let keys = Object.keys(parsedNotes[category][subCategory][finalCategory]);
+    // THIS WILL NOT WORK FOR MULTIPLE PARAGRAPHS, SO EACH PARAGRAPH NEEDS A UNIQUE TITLE and will need to pass it
 
-        // If the header/ key already exists then abort
-        if(keys.includes(newContent))
-        {
-            alert("Title of section already exists, please rename"); 
-            return "BADHEADER"; 
-        }
-
-        // Then iterate through the existing content and add
-        for(let i in parsedNotes[category][subCategory][finalCategory])
-        {
-
-            // If the current header is the old header then add the new header and new content, else add the next
-            if(keys[j] == originalHeader)
-            {
-                array[newContent] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
-            }
-            else
-            {             
-                array[keys[j]] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
-            }
-
-            j++; 
-        }
-
-        parsedNotes[category][subCategory][finalCategory] = array;
-        
-
-    }
-    else
-    {
-        // Add to parsed Notes so that ReconstructJson will update json
-        parsedNotes[category][subCategory][finalCategory][`${originalHeader}`] = newContent;
-    }
+    parsedNotes[category][subCategory][finalCategory][`${globalDivCategory}`] = newContent;
 
     ReconstructJson(); 
 
 }
 
-async function AddNewContentToJson(newHeader, newText, finalCategoryID, previousContentKey, previousHeader)
+async function AddNewContentToJson(newHeader, newText, parentID)
 {
-    // fOR CHECKING makes it this far
-    //console.log(`${newHeader} + ${newText} + ${finalCategoryID} + ${previousContentKey}`)
-
 
     // Set number before edit for check of category numbers
     globalCategoryNumberCheck = Object.keys(globalCategoryMap).length + Object.keys(globalSubCategoryMap).length + Object.keys(globalFinalCategoryMap).length;
     
-    // Needs to reconstruct the content so that it's in place
-    let category = globalCategoryMap[globalCategoryID].categoryName;
-    let subCategory = globalSubCategoryMap[globalSubCategoryID].categoryName;
-    let finalCategory = globalFinalCategoryMap[globalFinalCategoryID].categoryName;
+    // get last 2 digits and select only numbers
+    let num = parentID.substr(parentID.length - 2);
+    num = num.replace( /^\D+/g, '');
 
-    // if the last 5 characters of previousContentKey state title, then it's the first
-    let string = previousContentKey.substring(globalContentID.length - 5, globalContentID.length);
+    // Needs to reconstruct the content so that it's in place
+    let category = globalCategoryMap[globalContentCategoryID].categoryName;
+    let subCategory = globalSubCategoryMap[globalContentSubCategoryID].categoryName;
+    let finalCategory = globalFinalCategoryMap[globalContentFinalCategoryID].categoryName;
 
     let array = {}; 
     let j = 0; 
     let keys = Object.keys(parsedNotes[category][subCategory][finalCategory]);
-
-    // If the header/ key already exists then abort
-    if(keys.includes(newHeader))
-    {
-        alert("Title of section already exists, please rename"); 
-        return "BADHEADER"; 
-    }
-
-    // If the previous content is the pages title then new content goes first
-    if(string == "Title")
-    {
-        array[newHeader] = newText; 
-    }
-
-    // Then iterate through the existing content and add
     for(let i in parsedNotes[category][subCategory][finalCategory])
     {
-
-        // If the current category is the previous category then add the current and new category, else add the current
-        if(keys[j] == previousHeader)
+        if(j == num + 1)
         {
-            array[keys[j]] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
             array[newHeader] = newText; 
         }
         else
@@ -419,16 +352,4 @@ async function AddNewContentToJson(newHeader, newText, finalCategoryID, previous
 
     ReconstructJson(); 
 
-}
-
-async function DeleteContentFromJson(key)
-{
-
-    // get the names
-    let category = globalCategoryMap[globalCategoryID].categoryName;
-    let subCategory = globalSubCategoryMap[globalSubCategoryID].categoryName;
-    let finalCategory = globalFinalCategoryMap[globalFinalCategoryID].categoryName;
-
-    delete parsedNotes[category][subCategory][finalCategory][`${key}`];
-    ReconstructJson("delete"); 
 }
