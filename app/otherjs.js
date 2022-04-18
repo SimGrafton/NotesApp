@@ -36,3 +36,53 @@ function OutputError(text)
 {
     AddDataHTML(`User Selection invalid error: ${text}`); 
 }
+
+function OpenAtLocation(location, id)
+{
+    if(location == "category")
+    {
+
+    }
+
+    if(location == "subCategory")
+    {
+        
+    }
+
+    if(location == "finalCategory")
+    {
+        
+    }
+
+    if(location == "div")
+    {
+        
+    }
+}
+
+function RemoveNumberSuffix(string)
+{
+    let original = string.substr(0, string.length - 2);
+    let key = string.substr(string.length - 2);
+    key = key.replace(/[0-9]/g, '');
+    return original + key; 
+}
+
+function MakeID(length, stringToID) {
+
+    let string = RemoveSpaces(stringToID); 
+    let result           = '';
+    //let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = string.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += string.charAt(Math.floor(Math.random() * 
+        charactersLength));
+    }
+
+    return result;
+}
+
+// Removes all spaces and symbols from a string
+function RemoveSpaces(str){
+    return str.replace(/[^a-zA-Z]/g, ""); 
+}

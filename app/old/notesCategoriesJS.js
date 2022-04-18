@@ -21,9 +21,9 @@ var globalFinalCategoryID;
 var globalCategoryType; 
 var globalCategoryName;
 
-var globalNum = 10000; 
-
 var globalCategoryNumberCheck; 
+
+var globalNum = 10000; // This is used to add incrementing numbers to new id's. Make sure to increment before each use 
 
 async function LoadCategoriesIntoSidebar()
 {
@@ -358,6 +358,7 @@ function AddNewCategory()
                 // Add category with categoryName, newCategoryID
                 globalNum += 1; 
                 AddNewCategoryToJson(category, `${RemoveSpaces(category)}${globalNum}`);
+                AddCategory(category, `${RemoveSpaces(category)}${globalNum}`, `subCategoriesOf${RemoveSpaces(category)}${globalNum}`);
                 globalCategoryType = "category";
                 globalID = `${RemoveSpaces(category)}${globalNum}`;
                 
@@ -366,19 +367,29 @@ function AddNewCategory()
 
                 globalNum += 1; 
                 AddNewCategoryToJson(category, `${RemoveSpaces(category)}${globalNum}`);
+                AddSubCategory(category, `${RemoveSpaces(category)}${globalNum}`, `subCategoriesOf${globalID}`, `finalCategoriesOf${RemoveSpaces(category)}${globalNum}`);
                 globalCategoryType = "subCategory";
                 globalID = `${RemoveSpaces(category)}${globalNum}`;
+                
                 
 
             } else if (globalCategoryType == "subCategory") {
 
                 globalNum += 1; 
                 AddNewCategoryToJson(category, `${RemoveSpaces(category)}${globalNum}`);
+                AddFinalCategory(category, `${RemoveSpaces(category)}${globalNum}`, `finalCategoriesOf${globalID}`);
                 globalCategoryType = "finalCategory";
                 globalID = `${RemoveSpaces(category)}${globalNum}`;
                 
                 
             }
+
+            $(`#NewCategoryName`).remove();
+            $(`#submitEdit`).remove();
+            $(`#cancelEdit`).remove();
+
+            // Add event listeners
+            AddCategoryEventListeners();
 
             // This prevents the event from bubbling
             e.stopPropagation();
@@ -406,6 +417,8 @@ function AddNewCategory()
 
 function DeleteCategory() 
 {
+
+
     console.log("Deleting button clicked");
     //if (confirm(`are you sure you want to delete category ${globalCategoryName}?`)) { // This was causing the focus to be removed when adding new category after deleting
         $(`#${globalID}`).remove();
@@ -454,7 +467,9 @@ async function ReorderCategoriesDown()
         global[globalID].numbering = global[globalID].numbering + 1; 
 
         // Recreate json file
-        ReconstructJson(); 
+        await ReconstructJson().then(function(){
+            RefreshCategories(); 
+        });
 
     }
     else{
@@ -498,7 +513,9 @@ async function ReorderCategoriesUp()
         global[globalID].numbering = global[globalID].numbering - 1; 
 
         // Recreate json file
-        ReconstructJson();
+        await ReconstructJson().then(function(){
+            RefreshCategories(); 
+        });
 
     }
     else{
@@ -618,6 +635,11 @@ function AddFinalCategory(finalCategory, finalCategoryID, finalCategoryDropdownI
         </button>`);
 }
 
+// Removes all spaces and symbols from a string
+function RemoveSpaces(str){
+    return str.replace(/[^a-zA-Z]/g, ""); 
+}
+
 // For context menu
 var i = document.getElementById("menu").style;
 if (document.addEventListener) {
@@ -667,39 +689,9 @@ function RemoveEventListeners()
     $(`#btnAddNewCategory`).off();
 }
 
-// If you dont want to reopen position, just pass empty strings
 function RefreshCategories()
 {
-    // Need to store these as loadcategories() will delete them
-    let categoryType = globalCategoryType;
-    let categoryID = globalCategoryID; 
-    let subCategoryID = globalSubCategoryID;
-    LoadCategoriesIntoSidebar(); 
-
-    setTimeout(function () {
-        ReOpenCategoryDropdowns(categoryType, categoryID, subCategoryID)
-    }, 500);
-
     RefreshGlobals();
     RefreshIndexData();
-}
-
-function ReOpenCategoryDropdowns(categoryType, categoryID, subCategoryID)
-{
-    if(categoryType == "category")
-    {
-        $(`#collapseNotes`).click(); 
-        
-    }
-    if(categoryType == "subCategory")
-    {
-        $(`#collapseNotes`).click(); 
-        $(`#${categoryID}`).click();
-    }
-
-    if(categoryType == "finalCategory")
-    {
-        $(`#${categoryID}`).click();
-        $(`#${subCategoryID}`).click();
-    }
+    LoadCategoriesIntoSidebar(); 
 }

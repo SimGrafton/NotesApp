@@ -19,39 +19,38 @@ ctrl + r from within app or view -> reload
 
 -- To do --
 
+Current job
+4-feature. Add more available content. Including images. Code. Headers. Links.
+Restructure how adding new content works. 
 
-5-feature. Adding and saving new category.
+Add further content:
+Add Image Section
+Add links sections
 
-Get rid of code section, just have info section but allow to display code section so that I can move it. Have alert.
-There should be features at the top of the page, for edit, add picture, add code, add new, delete category.
+Commit message: 
+"Enabled adding, deleting and editing Header Content. Created global so that keys for the json file could
+be identified by the IDs. Restructured how Adding content works. Enabled additions of code sections. Added a very
+simple img content adding feature. 
+
+Unable to add a header section as content. Getting the keys was becoming complex and looked awful. Adding content was
+done with individual functions for each type of content, which was messy and repeated code. 
+
+Added in functionality to the Add header selection on the context menu for the page content. Created a global object
+to store the id/ key values as getting keys for the json file was getting messy. Created an adding content function 
+to handle adding all types of content. "
 
 
-3-feature. Adding more features to text. So should be able to read code and info, but then should have other boxes
-Each FinalCategory should have
-{
-    orderNum: 1,
-    mainText: ""
-}
 
-but then can add any of the following. Each can then have it's own way of adding. Can then add more here as well. Have 
-these options display on page and on right click.
-
-{
-    paragraph: " ",
-    header: "",
-    image: " ",
-    code: " ",
-    link: " "
-}
-
-4-feature. Editing text
-7-feature. Format the return values so that it looks like a blog page.
-
-1-bug. When you click the menu on the bottom entries, it opens up out of clickable range, need to check if its on
-screen and if not then position it higher up. Would be useful to have the position of the window size anyway. 
+Next job =: 
+6-feature. Enable highlight.js for the code entries. use npm to install.
+5-feature. Format the return values so that it looks like a blog page.
+1-bug. There seems to be an issue with adding a category name with a period in it. 
+ 
 
 Future:
 1. Enable pictures to be included.
+2. Enable reorganise of content?
+
 
 -- End of To do --
 
