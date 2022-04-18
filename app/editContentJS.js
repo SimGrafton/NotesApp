@@ -1,14 +1,11 @@
- // Globals
-var globalContentCategoryID;
-var globalContentSubCategoryID;
-var globalContentFinalCategoryID;
+var debug = false;
 
 var globalContentID; 
 var globalContentCategory;
+var globalPreviousKey; // Needed so that can reconstruct the json object in order when adding content
 
 function DisplayContentContextMenu(e)
 {
-
     GetWindowSize(); 
 
     // Set position of menu to mouse click
@@ -37,85 +34,220 @@ function DisplayContentContextMenu(e)
         $(`#menu`).append(`<a href="#" id="btnDeleteSection"><img src="icons/icons8-edit-50.png" />Delete section</a>`);
     }
 
-
-    if($(this).hasClass( "sectionHeader" ))
+    if($(this).hasClass( "paragraphContent" ))
     {
-        globalContentCategory = "sectionHeader"; 
-        globalContentID = this.id;
-    }
-
-    if($(this).hasClass( "paragraph" ))
-    {
-        globalContentCategory = "paragraph"; 
+        globalContentCategory = "paragraphContent"; 
         globalContentID = this.id; 
         
     } else if($(this).hasClass("pageTitle"))
     {
         globalContentID = this.id; 
         globalContentCategory = "pageTitle"; 
+
+    } else if ($(this).hasClass("headerContent"))
+    {
+        globalContentID = this.id; 
+        globalContentCategory = "headerContent"; 
+    } else if ($(this).hasClass("codeContent"))
+    {
+        globalContentID = this.id; 
+        globalContentCategory = "codeContent"; 
+    } else if ($(this).hasClass("imgContent"))
+    {
+        globalContentID = this.id; 
+        globalContentCategory = "imgContent"; 
+    }
+    else if ($(this).hasClass("linkContent"))
+    {
+        globalContentID = this.id; 
+        globalContentCategory = "linkContent"; 
+    }
+
+    if(debug)
+    {
+        let arr = {
+            function: `DisplayContentContextMenu()`,
+            globalContentID: `${globalContentID}`,
+            globalContentCategory: `${globalContentCategory}`
+        }
+        console.log("START OF EDITCONTENT PROCESS")
+        console.log(arr)
     }
 
     // Add event listeners
     $(`#btnEditDiv`).click(EditContent);
-    $(`#btnAddHeaderSection`).click(AddHeader);
-    $(`#btnAddParagraphSection`).click(AddParagraphInputSection);
+    $(`#btnAddHeaderSection`).click(function(){
+        AddContentInputSection("headerContent");
+    }); 
+    $(`#btnAddParagraphSection`).click(function(){
+        AddContentInputSection("paragraphContent");
+    }); 
+    $(`#btnAddCodeSection`).click(function(){
+        AddContentInputSection("codeContent");
+    }); 
+    $(`#btnAddImageSection`).click(function(){
+        AddContentInputSection("imgContent");
+    }); 
+    $(`#btnAddLinkSection`).click(function(){
+        AddContentInputSection("linkContent");
+    }); 
     $(`#btnDeleteSection`).click(DeleteSection); 
     
 }
 
-function AddParagraphInputSection()
+function AddContentInputSection(contentCategory)
 {
-    // globalContentCategory will be "paragraph", globalDivID is the current div
 
-    // If it's a header, it needs to add the new paragraph below the next div
-    if(globalContentCategory == "sectionHeader" )
+    // Set the key as the page title header
+    let ID = globalContentID; 
+    let previousKey = globalKeyFromIDMap[$(`#${ID}`).attr("id")]; 
+
+    if(!previousKey)
     {
-        globalContentID = $(`#${globalContentID}`).next().attr("id"); 
-        globalContentCategory = "paragraph"; 
+        previousKey = ID; 
     }
-
-    // Add paragraph div to html below the current div
-    $(`#${globalContentID}`).after(`<textarea class="paragraphSection form-control p-0 mb-1" id="new${globalContentCategory}Header123" rows="1" style="width: 50%;">Add paragraph title here</textarea>`);
-    $(`#new${globalContentCategory}Header123`).after(`<textarea class="paragraphSection form-control p-0 mb-1" id="new${globalContentCategory}" rows="10" style="min-width: 100px;">Add paragraph text here</textarea>`);
-
+    
+    // Add content below the current content - First add the header for the content, then add the content
+    $(`#${ID}`).after(GetNewContentInputHTML(contentCategory, "content"));    
+    
     // Add submit and cancel buttons
-    $(`#new${globalContentCategory}`).after(`
+    $(`#newContent`).after(`
         <button class="btn btn-primary btn-sm mb-2" id="submitNewSection">Add</button>
         <button class="btn btn-primary btn-sm mb-2" id="cancelAddingSection">Cancel</button>`);
 
-    // Add event listeners
-    $(`#submitNewSection`).click(AddContent); 
-    $(`#cancelAddingSection`).click(CancelAddDiv); 
+    // Add event listeners to either cancel or submit the data
+    $(`#cancelAddingSection`).click(CancelAddContent); 
+
+    EnableTabs("newContent"); // This makes it so tabs make indent rather than tabbing to next item. 
+
+    $(`#submitNewSection`).click(function () {
+
+        // Get the entered content
+        let newContent = $(`#newContent`).val(); 
+
+        // Verify the content entered
+        if(newContent.length < 2 || newContent == undefined)
+        {
+            console.log("Content needs to be greater than 2 characters")
+            return; 
+        }
+
+        // Create a key of length 10
+        let newContentKey = MakeID(10, newContent); 
+
+        // Add a prefix if necessary so that content type can be identified e.g with 11HEAD11 for a header
+        newContentKey = SetNewContentPrefix(contentCategory, newContentKey);
+
+        if(debug)
+        {
+            let arr = {
+                function: `AddContentInputSection()`,
+                newContentKey: `${newContentKey}`,
+                newContent: `${newContent}`,
+                previousKey: `${previousKey}`
+            }
+            console.log(arr)
+        }
+
+        AmendJsonAddContentAndRefreshPage(newContentKey, newContent, previousKey)
+    }); 
     
 }
 
-async function AddContent()
+// This is where the new data entry box html is set. So define how you want the input box to look here
+function GetNewContentInputHTML(contentCategory, headerOrContent)
 {
-    let previousHeader = $(`#${globalContentID}`).prev().html(); 
-    
-    // Get the title to be used as a key for the new paragraph
-    let header = $(`#new${globalContentCategory}Header123`).val(); 
-
-    if(header.length < 2 || header == undefined)
+    if(headerOrContent == "contentKey")
     {
-        console.log("Header not set")
-        return; 
+        return `<textarea class="${contentCategory} form-control p-0 mb-1" id="newContentKey" rows="1" style="width: 50%;">Enter label</textarea>`; 
     }
 
-    // Get the text input
-    let newText = $(`#new${globalContentCategory}`).val();
+    if(headerOrContent == "content")
+    {
+        // html for a new paragraph entry box
+        if (contentCategory == "paragraphContent")
+        {
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;">Enter Content</textarea>`;
+        }
+
+        if (contentCategory == "headerContent")
+        {
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;">Enter Header</textarea>`; 
+        }
+
+        if (contentCategory == "codeContent")
+        {
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;">Enter Code</textarea>`;
+        }
+
+        if (contentCategory == "imgContent")
+        {
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px;">Enter image filename</textarea>`;
+        }
+
+        if (contentCategory == "linkContent")
+        {
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px;">Enter link address</textarea>`;
+        }
+    }
+
+}
+
+function SetNewContentPrefix(contentCategory, header)
+{
+    let setHeader = RemoveSpaces(header);
+
+    if(contentCategory == "codeContent")
+    {
+        return `11CODE11${setHeader}`; 
+    }
+
+    if(contentCategory == "imgContent")
+    {
+        return `11IMG11${setHeader}`; 
+    }
+
+    if(contentCategory == "headerContent")
+    {
+        return `11HEAD11${setHeader}`; 
+    }
+
+    if(contentCategory == "linkContent")
+    {
+        return `11LINK11${setHeader}`; 
+    }
+
+    else 
+    {
+        return setHeader; 
+    }
+}
+
+async function AmendJsonAddContentAndRefreshPage(newContentKey, newText, previousKey)
+{
 
     // Set the globals so they can be used after ReconstructJson
     let categoryID = globalCategoryID; 
     let subCategoryID = globalSubCategoryID;
     let finalCategoryID = globalFinalCategoryID;
 
-    
+    if (debug) {
+        let arr = {
+            function: `AddNewContentToJson()`,
+            newContentKey: `${newContentKey}`,
+            newText: `${newText}`,
+            previousKey: `${previousKey}`,
+            finalCategoryID: `${finalCategoryID}`,
+        }
+        console.log(arr)
+    }
+
     // Add the text to json. AddNewContentToJson takes in the new content key name, the new text, the finalCategoryID and the id of the content position before the new content
-    await AddNewContentToJson(header, newText, globalFinalCategoryID, globalContentID, previousHeader).then(function(e){
+    await AddNewContentToJson(newContentKey, newText, previousKey).then(function(e){
 
         if (e == "BADHEADER")
         {
+            console.log("bad header")
             return; 
         }
         // reload the page 
@@ -131,20 +263,13 @@ async function AddContent()
             ReOpenCategoryDropdowns("finalCategory", categoryID, subCategoryID); 
             $(`#${finalCategoryID}`).click(); 
         }, 500);
-         
     })
 }
 
-function AddHeader()
+function CancelAddContent()
 {
-    let section = "Header"; 
-    AddDataHTML(`<div><h5 class="text-left ml-3" style="float:left;" contenteditable = "true" id="${globalFinalCategoryID}${section}${num}">${response[i]}</h5></div>`);
-}
-
-function CancelAddDiv()
-{
-    $(`#new${globalContentCategory}Header123`).remove();
-    $(`#new${globalContentCategory}`).remove();
+    
+    $(`#newContent`).remove();
     $(`#submitNewSection`).remove();
     $(`#cancelAddingSection`).remove();
     
@@ -152,61 +277,68 @@ function CancelAddDiv()
 
 function EditContent()
 {
-    if(globalContentCategory == "paragraph" || globalContentCategory == "sectionHeader")
-    { 
-        
-        // Replace info box with text editor
-        let currentText = $(`#${globalContentID}`).html(); 
 
-        let numOfLines = currentText.length / 30 ; 
 
-        $(`#${globalContentID}`).html(`
+    // Replace info box with text editor
+    let currentText = $(`#${globalContentID}`).html();
+
+    let numOfLines = (currentText.length / 30) + 5;
+
+    $(`#${globalContentID}`).html(`
         <textarea class="form-control p-0 mb-1" id="newEditContent" rows="${numOfLines}" style="min-width: 100px;">${currentText}</textarea>`);
 
-        $(`#${globalContentID}`).after(`
+    EnableTabs("newEditContent"); // This makes it so tabs make indent rather than tabbing to next item. 
+
+    $(`#${globalContentID}`).after(`
         <button class="btn btn-primary btn-sm mb-2" id="submitNewInfoText">Confirm edit</button>
         <button class="reloadBtn btn btn-primary btn-sm mb-2" id="cancelEdittingInfoText">Cancel Edit</button>`);
 
-        // Add event listeners
-        $(`#cancelEdittingInfoText`).click(function(){
-            CancelEditSection(currentText);
-        })
+    // Add event listeners
+    $(`#cancelEdittingInfoText`).click(function () {
+        CancelEditSection(currentText);
+    })
 
-        // Add event listeners
-        $(`#submitNewInfoText`).click(SubmitEditSection);
-
-    }
+    // Add event listeners
+    $(`#submitNewInfoText`).click(SubmitEditSection);
 
 }
 
 async function SubmitEditSection()
 {
-    // if header then get the key by removing the "Header"
-    let originalHeader; 
-    if(globalContentCategory == "sectionHeader")
-    {
-        originalHeader = $(`#${globalContentID}`).attr("id");
-        originalHeader = originalHeader.substring(0, originalHeader.indexOf("Header123")); 
+    // Get the key
+    let ID = globalContentID; 
+    let key = globalKeyFromIDMap[$(`#${ID}`).attr("id")]; 
 
-        if(originalHeader.length < 2 || originalHeader == undefined)
-        {
-            alert("Header not set or less than 2 characters in length")
-            return; 
-        }
-    }
-    else{
-        originalHeader = $(`#${globalContentID}`).prev().attr("id");
-        originalHeader = originalHeader.substring(0, originalHeader.indexOf("Header123"))
+    if(!key)
+    {
+        key = ID; 
     }
 
     let newText = $(`#newEditContent`).val(); 
+
+    // Validate new entry
+    if(newText.length < 2 || newText == undefined)
+    {
+        console.log("New content is too short")
+        return; 
+    }
 
     // Set the globals so they can be used after ReconstructJson
     let categoryID = globalCategoryID; 
     let subCategoryID = globalSubCategoryID;
     let finalCategoryID = globalFinalCategoryID;
 
-    await EditContentInJson(newText, originalHeader).then(function(e){
+    if(debug)
+    {
+        let arr = {
+            Function: `SubmitEditSection()`,
+            key: `${key}`,
+            newText: `${newText}`            
+        }
+        console.log(arr)
+    }
+
+    await EditContentInJson(newText, key).then(function(e){
 
         if (e == "BADHEADER")
         {
@@ -239,29 +371,10 @@ function CancelEditSection(currentText)
     $(`#submitNewInfoText`).remove(); 
 }
 
-function ResetEditContentGlobals()
-{
-    globalContentCategory = ""; 
-    globalContentCategoryID = "";
-    globalContentSubCategoryID = "";
-    globalContentFinalCategoryID = "";
-    globalContentID = ""; 
-}
-
 async function DeleteSection()
 {
-    let key; 
-    if(globalContentCategory == "sectionHeader")
-    {
-        key = $(`#${globalContentID}`).attr("id");
-        key = key.substring(0, key.indexOf("Header123"));
-    }
-    else{
-        key = $(`#${globalContentID}`).prev().attr("id");
-        key = key.substring(0, key.indexOf("Header123"))
-    }
-
-    console.log(key)
+    // Get the key for the json object
+    let key = globalKeyFromIDMap[$(`#${globalContentID}`).attr("id")];
 
     // Set the globals so they can be used after ReconstructJson
     let categoryID = globalCategoryID; 
@@ -286,4 +399,23 @@ async function DeleteSection()
         }, 500);
     })
 
+}
+
+function EnableTabs(id){
+
+    $(`#${id}`).keydown( function(e) {
+        if (e.key == 'Tab') {
+          e.preventDefault();
+          var start = this.selectionStart;
+          var end = this.selectionEnd;
+      
+          // set textarea value to: text before caret + tab + text after caret
+          this.value = this.value.substring(0, start) +
+            "    " + this.value.substring(end);
+      
+          // put caret at right position again
+          this.selectionStart =
+            this.selectionEnd = start + 4;
+        }
+      });
 }

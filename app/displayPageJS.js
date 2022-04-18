@@ -1,42 +1,87 @@
+// Globals
+var globalKeyFromIDMap = {}; // Added to in DisplayContent() as it's difficult to store the key name in the html as there could be spaces or numbers
+
 async function DisplayContent(category, subCategory, finalCategory){
 
+    // Reset so that when page is displayed there is fresh entries
+    globalKeyFromID = {};
+    
     // Open file
     await GetContentFromFile(category, subCategory, finalCategory).then(function(response){
 
         RefreshIndexData();
 
         // Add Title + Edit Name + Delete + Add new category
-        AddDataHTML(`<h3 class="pageTitle hasContentContext d-flex justify-content-center font-weight-bold p-5" id="${globalFinalCategoryID}Title">${category} > ${subCategory} > ${finalCategory}</h3>`);
+        AddDataHTML(`<h3 class="pageTitle hasContextMenu d-flex justify-content-center font-weight-bold p-5" id="${globalFinalCategoryID}Title123">${category} > ${subCategory} > ${finalCategory}</h3>`);
 
-        // TODO
-        // Each section needs a unqique category name to be used as an identifier. Need to remove invalid characters and check no duplicates
-
-        let num = 0;
+        num = 0; 
         for(let i in response)
         {
-            let section = Object.keys(response)[num]; 
+            let contentKey = Object.keys(response)[num]; 
+            let sectionID = RemoveSpaces(contentKey); 
+            let contentHeaderID = `${sectionID}Header123`; 
+            let contentID; 
+            let contentClass; // Used for CSS
+            let furtherClasses; 
+            let contentStyle; 
 
-            AddDataHTML(`<h5 class="sectionHeader hasContentContext text-left ml-3" style="float:left;" id ="${section}Header123">${section}</h5>`);
+            globalKeyFromIDMap[`${contentHeaderID}`] = contentKey; // Add header id to map
 
-            if(section.includes("11img11"))
+            if(contentKey.includes("11IMG11"))
             {
-                AddDataHTML(`<div class="img hasContentContext d-flex justify-content-center p-1 ml-3 mb-5" id="${globalFinalCategoryID}${section}${num}">${response[i]}</div>`);
+                contentID = `${sectionID}11IMG11${globalFinalCategoryID}`; 
+                contentClass = "imgContent p-1 ml-3 mb-3 align-self-center"; 
+                
+                ImageSizes(`${response[i]}`, contentID); 
+
+                AddDataHTML(`<img src="../data/images/${response[i]}" class="${contentClass} hasContextMenu d-flex" 
+                    alt="${response[i]}" id="${contentID}" style="${contentStyle}"></img>`);
+
             }
-            else if(section.includes("11Header11"))
+            else if(contentKey.includes("11HEAD11"))
             {
-                AddDataHTML(`<h5 class="header hasContentContext text-left ml-3" style="float:left;" id="${globalFinalCategoryID}${section}${num}">${response[i]}</h5>`);
-            } else
+                contentID = `${sectionID}11HEAD11${globalFinalCategoryID}`; 
+                contentClass = "headerContent"; 
+
+                AddDataHTML(`<h3 class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 font-weight-bold justify-content-center" 
+                                id="${contentID}">${response[i]}</h3>`);
+
+            } else if (contentKey.includes("11LINK11"))
             {
-                AddDataHTML(`<p class="paragraph hasContentContext text-left ml-3" style="float:left;" id="${globalFinalCategoryID}${section}${num}">${response[i]}</p>`);
+                contentID = `${sectionID}11LINK11${globalFinalCategoryID}`; 
+                contentClass = "linkContent link-primary"; 
+
+                AddDataHTML(`<a class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 font-weight-bold justify-content-center" 
+                                id="${contentID}">${response[i]}</a>`);
+
+            } else if (contentKey.includes("11CODE11")) // Not doing "code" as well as will move the code
+            {
+                contentID = `${sectionID}11CODE11${globalFinalCategoryID}`; 
+                contentClass = "codeContent";
+                // going to use highlight.js for this
+                contentStyle = `white-space: pre-wrap;`; // Whitespace prewrap enables the /t and /n for tabs and newlines
+
+                AddDataHTML(`<code class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 justify-content-center" id="${contentID}" style="${contentStyle}">${response[i]}</code>`);
+
+            }else // otherwise jsut display as text
+            {
+                contentID = `${sectionID}11PARA11${globalFinalCategoryID}`; 
+                contentClass = "paragraphContent";
+                contentStyle = `white-space: pre-wrap;`;
+
+                AddDataHTML(`<div class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3" id="${contentID}" style="${contentStyle}">${response[i]}</div>`);
             }
 
-            num += 1; 
+            
+
+            globalKeyFromIDMap[contentID] = contentKey; 
+            
+
+            num++; 
         }
-
-        //<div class="d-flex justify-content-center p-1">${html}</div>
-
+        
         // text context menu event listener
-        $(`.hasContentContext`).contextmenu(DisplayContentContextMenu);
+        $(`.hasContextMenu`).contextmenu(DisplayContentContextMenu);
 
     });
 }
@@ -58,4 +103,14 @@ async function GetContentFromFile(category, subCategory, FinalCategory)
 			} 
 		})
 	})
+}
+
+function ImageSizes(source, id)
+{
+    var img = new Image();
+    img.onload = function() {
+        //  alert(this.width + 'x' + this.height);
+        $(`#${id}`).attr(`style`, `width: ${this.width}px; height: ${this.height}px;`); 
+    }
+    img.src = `../data/images/${source}`;
 }

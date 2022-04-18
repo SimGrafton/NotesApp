@@ -19,26 +19,31 @@ ctrl + r from within app or view -> reload
 
 -- To do --
 
+Current job
+4-feature. Add more available content. Including images. Code. Headers. Links.
+Restructure how adding new content works. 
 
-4-feature. Edit text.
+Add further content:
+Add Image Section
+Add links sections
 
 Commit message: 
-"Enabled edit of content sections. Fixed Bugs. Re-architectured how the application responds after a change is made.
+"Enabled adding, deleting and editing Header Content. Created global so that keys for the json file could
+be identified by the IDs. Restructured how Adding content works. Enabled additions of code sections. Added a very
+simple img content adding feature. 
 
-Content could not be edited, nor added to or deleted. System of content was either an info section or code section. 
-When you opened the context menu, if too low in the app then all options were not viewable. When the JSON file is edited,
-the app would display the changes without reloading from the json file, however, this created significantly increased 
-complexity when adding new data and if many entries were added then it got worse. 
+Unable to add a header section as content. Getting the keys was becoming complex and looked awful. Adding content was
+done with individual functions for each type of content, which was messy and repeated code. 
 
-Content can now be edited and have implemented a system so that each bit of content has a unique name. Can now add
-paragraph sections, delete and edit them. When JSON changes are made, app now refreshes and reopens at the location.
-Added ipcmain and ipcrenderer processes to ensure context menu appears within browserwindow."
+Added in functionality to the Add header selection on the context menu for the page content. Created a global object
+to store the id/ key values as getting keys for the json file was getting messy. Created an adding content function 
+to handle adding all types of content. "
 
-Current job
 
-3-feature. Add more available content. Including images. Code. Headers. Links.
+
+Next job =: 
+6-feature. Enable highlight.js for the code entries. use npm to install.
 5-feature. Format the return values so that it looks like a blog page.
-
 1-bug. There seems to be an issue with adding a category name with a period in it. 
  
 

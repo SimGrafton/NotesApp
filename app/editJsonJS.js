@@ -119,7 +119,7 @@ async function ReconstructJson(action)
     {
         if(numberCheck != globalCategoryNumberCheck){
 
-            alert(`Count of categories before move (${globalCategoryNumberCheck}) and after move (${numberCheck})are not equal, change has not been made`);
+            console.log(`Count of categories before move (${globalCategoryNumberCheck}) and after move (${numberCheck})are not equal, change has not been made`);
             RefreshCategories(); 
             return; 
         }
@@ -318,7 +318,7 @@ async function EditContentInJson(newContent, originalHeader)
     let finalCategory = globalFinalCategoryMap[globalFinalCategoryID].categoryName;
 
     // if header needs to edit key, else needs to edit the content
-    if(globalContentCategory == "sectionHeader")
+    if(globalContentCategory == "contentHeader")
     {
         // For this needs to reconstruct
         let array = {}; 
@@ -328,7 +328,7 @@ async function EditContentInJson(newContent, originalHeader)
         // If the header/ key already exists then abort
         if(keys.includes(newContent))
         {
-            alert("Title of section already exists, please rename"); 
+            console.log("Title of section already exists, please rename"); 
             return "BADHEADER"; 
         }
 
@@ -363,11 +363,17 @@ async function EditContentInJson(newContent, originalHeader)
 
 }
 
-async function AddNewContentToJson(newHeader, newText, finalCategoryID, previousContentKey, previousHeader)
+async function AddNewContentToJson(newHeader, newText, previousContentKey)
 {
-    // fOR CHECKING makes it this far
-    //console.log(`${newHeader} + ${newText} + ${finalCategoryID} + ${previousContentKey}`)
-
+    if (debug) {
+        let arr = {
+            function: `AddNewContentToJson()`,
+            newHeader: `${newHeader}`,
+            newText: `${newText}`,
+            previousContentKey: `${previousContentKey}`,
+        }
+        console.log(arr)
+    }
 
     // Set number before edit for check of category numbers
     globalCategoryNumberCheck = Object.keys(globalCategoryMap).length + Object.keys(globalSubCategoryMap).length + Object.keys(globalFinalCategoryMap).length;
@@ -377,9 +383,6 @@ async function AddNewContentToJson(newHeader, newText, finalCategoryID, previous
     let subCategory = globalSubCategoryMap[globalSubCategoryID].categoryName;
     let finalCategory = globalFinalCategoryMap[globalFinalCategoryID].categoryName;
 
-    // if the last 5 characters of previousContentKey state title, then it's the first
-    let string = previousContentKey.substring(globalContentID.length - 5, globalContentID.length);
-
     let array = {}; 
     let j = 0; 
     let keys = Object.keys(parsedNotes[category][subCategory][finalCategory]);
@@ -387,25 +390,29 @@ async function AddNewContentToJson(newHeader, newText, finalCategoryID, previous
     // If the header/ key already exists then abort
     if(keys.includes(newHeader))
     {
-        alert("Title of section already exists, please rename"); 
+        console.log("Title of section already exists, please rename"); 
         return "BADHEADER"; 
     }
 
     // If the previous content is the pages title then new content goes first
-    if(string == "Title")
+    let numOfNewEntries = 0; 
+    if(previousContentKey.includes("Title123"))
     {
         array[newHeader] = newText; 
+        numOfNewEntries += 1; 
     }
 
     // Then iterate through the existing content and add
+    
     for(let i in parsedNotes[category][subCategory][finalCategory])
     {
 
         // If the current category is the previous category then add the current and new category, else add the current
-        if(keys[j] == previousHeader)
+        if(keys[j] == previousContentKey)
         {
             array[keys[j]] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
             array[newHeader] = newText; 
+            numOfNewEntries += 1; 
         }
         else
         {             
@@ -413,6 +420,16 @@ async function AddNewContentToJson(newHeader, newText, finalCategoryID, previous
         }
 
         j++; 
+    }
+
+    if(numOfNewEntries == 0)
+    {
+        console.log("Nothing added, error")
+    } else if(numOfNewEntries == 1)
+    {
+        console.log("Entry added, updating Json file..."); 
+    }else{
+        console.log("More than one entry added?")
     }
 
     parsedNotes[category][subCategory][finalCategory] = array;

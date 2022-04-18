@@ -67,3 +67,22 @@ function RemoveNumberSuffix(string)
     key = key.replace(/[0-9]/g, '');
     return original + key; 
 }
+
+function MakeID(length, stringToID) {
+
+    let string = RemoveSpaces(stringToID); 
+    let result           = '';
+    //let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = string.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += string.charAt(Math.floor(Math.random() * 
+        charactersLength));
+    }
+
+    return result;
+}
+
+// Removes all spaces and symbols from a string
+function RemoveSpaces(str){
+    return str.replace(/[^a-zA-Z]/g, ""); 
+}

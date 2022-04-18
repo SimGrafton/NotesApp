@@ -618,11 +618,6 @@ function AddFinalCategory(finalCategory, finalCategoryID, finalCategoryDropdownI
         </button>`);
 }
 
-// Removes all spaces and symbols from a string
-function RemoveSpaces(str){
-    return str.replace(/[^a-zA-Z]/g, ""); 
-}
-
 // For context menu
 var i = document.getElementById("menu").style;
 if (document.addEventListener) {
