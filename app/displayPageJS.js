@@ -11,8 +11,11 @@ async function DisplayContent(category, subCategory, finalCategory){
 
         RefreshIndexData();
 
+
+        AddDataHTML(`<h5 class="d-flex ps-3 pt-3 text-muted">${category}</h5>`); 
+        AddDataHTML(`<h5 class="d-flex ps-4 pt-1 text-muted">${subCategory}</h5>`);
         // Add Title + Edit Name + Delete + Add new category
-        AddDataHTML(`<h3 class="pageTitle hasContextMenu d-flex justify-content-center font-weight-bold p-5" id="${globalFinalCategoryID}Title123">${category} > ${subCategory} > ${finalCategory}</h3>`);
+        AddDataHTML(`<h1 class="pageTitle hasContextMenu d-flex justify-content-center font-weight-bold" id="${globalFinalCategoryID}Title123" style="font-family: 'Times New Roman'">${finalCategory}</h1>`);
 
         num = 0; 
         for(let i in response)
@@ -43,8 +46,8 @@ async function DisplayContent(category, subCategory, finalCategory){
                 contentID = `${sectionID}11HEAD11${globalFinalCategoryID}`; 
                 contentClass = "headerContent"; 
 
-                AddDataHTML(`<h3 class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 font-weight-bold justify-content-center" 
-                                id="${contentID}">${response[i]}</h3>`);
+                AddDataHTML(`<h5 class="${contentClass} hasContextMenu d-flex pl-1 ml-3 font-weight-bold justify-content-left" 
+                                id="${contentID}">${response[i]}</h5>`);
 
             } else if (contentKey.includes("11LINK11"))
             {

@@ -20,36 +20,28 @@ ctrl + r from within app or view -> reload
 -- To do --
 
 Current job
-4-feature. Add more available content. Including images. Code. Headers. Links.
-Restructure how adding new content works. 
+6-feature. Format the return values so that it looks like a blog page.
 
-Add further content:
-Add Image Section
-Add links sections
+Commit
+"Formatted more in style of modern blog page
 
-Commit message: 
-"Enabled adding, deleting and editing Header Content. Created global so that keys for the json file could
-be identified by the IDs. Restructured how Adding content works. Enabled additions of code sections. Added a very
-simple img content adding feature. 
-
-Unable to add a header section as content. Getting the keys was becoming complex and looked awful. Adding content was
-done with individual functions for each type of content, which was messy and repeated code. 
-
-Added in functionality to the Add header selection on the context menu for the page content. Created a global object
-to store the id/ key values as getting keys for the json file was getting messy. Created an adding content function 
-to handle adding all types of content. "
-
-
+Moved the headers to left-align. Change the categories to display faded and vertically. Changed the font of the title.
+"
 
 Next job =: 
-6-feature. Enable highlight.js for the code entries. use npm to install.
-5-feature. Format the return values so that it looks like a blog page.
+
+Sort backups
 1-bug. There seems to be an issue with adding a category name with a period in it. 
+1-feature. Allow multiple notes files. And so you can select which one from inside the application. Can you save the
+users information and which document they had open last? Even which page?
+
  
 
 Future:
-1. Enable pictures to be included.
 2. Enable reorganise of content?
+3. Enable bold, italics, underline?
+4. Enable dark mode?
+5. Have this as a module that can be used in other products. So can have this as a tab in Trading app.
 
 
 -- End of To do --
