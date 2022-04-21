@@ -18,7 +18,7 @@ async function EditCategoryNameInJson(newCategoryName){
     }
 
     // Update the JSON file
-    await UpdateJsonFile(parsedNotes).then(function(status){
+    await UpdateJsonFile(globalParsedNotes).then(function(status){
         if(status){
             ReconstructJson("Edit Category");
         }
@@ -36,7 +36,7 @@ async function UpdateJsonFile(updatedJson){
 
         let status = false; 
 
-		fs.writeFile("data/MyNotesJson.txt", JSON.stringify(updatedJson), function (err) {
+		fs.writeFile(`data/${globalCurrentFile}`, JSON.stringify(updatedJson), function (err) {
 			if (err) {
                 console.log("An error has occurred opening json storage file: " + err);
                 
@@ -87,7 +87,7 @@ async function ReconstructJson(action)
                         // so catching it here
                         let thing;
                         try{
-                            thing = parsedNotes[category[0]][subCategory[0]][finalCategory[0]]; 
+                            thing = globalParsedNotes[category[0]][subCategory[0]][finalCategory[0]]; 
                         }
                         catch(e)
                         {
@@ -99,7 +99,7 @@ async function ReconstructJson(action)
                             newBuild[category[2]][subCategory[2]][finalCategory[2]] = {};
                             
                         }else{
-                            newBuild[category[2]][subCategory[2]][finalCategory[2]] = parsedNotes[category[0]][subCategory[0]][finalCategory[0]];
+                            newBuild[category[2]][subCategory[2]][finalCategory[2]] = globalParsedNotes[category[0]][subCategory[0]][finalCategory[0]];
                         }
 
                         numberCheck += 1; 
@@ -192,7 +192,7 @@ function FindSubCategoryByNumber(num, global, parent)
 function DeleteCategoryFromJson()
 {
 
-    console.log("Deleting from Json");
+    //console.log("Deleting from Json");
     
     if(globalCategoryType == "category")
     {
@@ -323,7 +323,7 @@ async function EditContentInJson(newContent, originalHeader)
         // For this needs to reconstruct
         let array = {}; 
         let j = 0; 
-        let keys = Object.keys(parsedNotes[category][subCategory][finalCategory]);
+        let keys = Object.keys(globalParsedNotes[category][subCategory][finalCategory]);
 
         // If the header/ key already exists then abort
         if(keys.includes(newContent))
@@ -333,30 +333,31 @@ async function EditContentInJson(newContent, originalHeader)
         }
 
         // Then iterate through the existing content and add
-        for(let i in parsedNotes[category][subCategory][finalCategory])
+        for(let i in globalParsedNotes[category][subCategory][finalCategory])
         {
 
             // If the current header is the old header then add the new header and new content, else add the next
             if(keys[j] == originalHeader)
             {
-                array[newContent] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
+                array[newContent] = globalParsedNotes[category][subCategory][finalCategory][keys[j]]; 
             }
             else
             {             
-                array[keys[j]] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
+                array[keys[j]] = globalParsedNotes[category][subCategory][finalCategory][keys[j]]; 
             }
 
             j++; 
         }
 
-        parsedNotes[category][subCategory][finalCategory] = array;
+        globalParsedNotes[category][subCategory][finalCategory] = array;
         
 
     }
     else
     {
         // Add to parsed Notes so that ReconstructJson will update json
-        parsedNotes[category][subCategory][finalCategory][`${originalHeader}`] = newContent;
+        console.log(globalParsedNotes)
+        globalParsedNotes[category][subCategory][finalCategory][`${originalHeader}`] = newContent;
     }
 
     ReconstructJson(); 
@@ -385,7 +386,8 @@ async function AddNewContentToJson(newHeader, newText, previousContentKey)
 
     let array = {}; 
     let j = 0; 
-    let keys = Object.keys(parsedNotes[category][subCategory][finalCategory]);
+    let keys = Object.keys(globalParsedNotes[category][subCategory][finalCategory]);
+
 
     // If the header/ key already exists then abort
     if(keys.includes(newHeader))
@@ -404,19 +406,19 @@ async function AddNewContentToJson(newHeader, newText, previousContentKey)
 
     // Then iterate through the existing content and add
     
-    for(let i in parsedNotes[category][subCategory][finalCategory])
+    for(let i in globalParsedNotes[category][subCategory][finalCategory])
     {
 
         // If the current category is the previous category then add the current and new category, else add the current
         if(keys[j] == previousContentKey)
         {
-            array[keys[j]] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
+            array[keys[j]] = globalParsedNotes[category][subCategory][finalCategory][keys[j]]; 
             array[newHeader] = newText; 
             numOfNewEntries += 1; 
         }
         else
         {             
-            array[keys[j]] = parsedNotes[category][subCategory][finalCategory][keys[j]]; 
+            array[keys[j]] = globalParsedNotes[category][subCategory][finalCategory][keys[j]]; 
         }
 
         j++; 
@@ -432,7 +434,7 @@ async function AddNewContentToJson(newHeader, newText, previousContentKey)
         console.log("More than one entry added?")
     }
 
-    parsedNotes[category][subCategory][finalCategory] = array;
+    globalParsedNotes[category][subCategory][finalCategory] = array;
 
     ReconstructJson(); 
 
@@ -446,6 +448,6 @@ async function DeleteContentFromJson(key)
     let subCategory = globalSubCategoryMap[globalSubCategoryID].categoryName;
     let finalCategory = globalFinalCategoryMap[globalFinalCategoryID].categoryName;
 
-    delete parsedNotes[category][subCategory][finalCategory][`${key}`];
+    delete globalParsedNotes[category][subCategory][finalCategory][`${key}`];
     ReconstructJson("delete"); 
 }

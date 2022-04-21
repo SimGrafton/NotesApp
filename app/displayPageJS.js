@@ -6,106 +6,85 @@ async function DisplayContent(category, subCategory, finalCategory){
     // Reset so that when page is displayed there is fresh entries
     globalKeyFromID = {};
     
-    // Open file
-    await GetContentFromFile(category, subCategory, finalCategory).then(function(response){
+    RefreshIndexData();
 
-        RefreshIndexData();
+    let response = globalParsedNotes[category][subCategory][finalCategory];
 
+    AddDataHTML(`<h5 class="d-flex ps-3 pt-3 text-muted">${category}</h5>`);
+    AddDataHTML(`<h5 class="d-flex ps-4 pt-1 text-muted">${subCategory}</h5>`);
+    // Add Title + Edit Name + Delete + Add new category
+    AddDataHTML(`<h1 class="pageTitle hasContextMenu d-flex justify-content-center font-weight-bold" id="${globalFinalCategoryID}Title123" style="font-family: 'Times New Roman'">${finalCategory}</h1>`);
 
-        AddDataHTML(`<h5 class="d-flex ps-3 pt-3 text-muted">${category}</h5>`); 
-        AddDataHTML(`<h5 class="d-flex ps-4 pt-1 text-muted">${subCategory}</h5>`);
-        // Add Title + Edit Name + Delete + Add new category
-        AddDataHTML(`<h1 class="pageTitle hasContextMenu d-flex justify-content-center font-weight-bold" id="${globalFinalCategoryID}Title123" style="font-family: 'Times New Roman'">${finalCategory}</h1>`);
+    UpdateSettingsFile("currentCategory", category);
+    UpdateSettingsFile("currentSubCategory", subCategory);
+    UpdateSettingsFile("currentFinalCategory", finalCategory);
 
-        num = 0; 
-        for(let i in response)
-        {
-            let contentKey = Object.keys(response)[num]; 
-            let sectionID = RemoveSpaces(contentKey); 
-            let contentHeaderID = `${sectionID}Header123`; 
-            let contentID; 
-            let contentClass; // Used for CSS
-            let furtherClasses; 
-            let contentStyle; 
+    num = 0;
+    for (let i in response) {
+        let contentKey = Object.keys(response)[num];
+        let sectionID = RemoveSpaces(contentKey);
+        let contentHeaderID = `${sectionID}Header123`;
+        let contentID;
+        let contentClass; // Used for CSS
+        let furtherClasses;
+        let contentStyle;
 
-            globalKeyFromIDMap[`${contentHeaderID}`] = contentKey; // Add header id to map
+        globalKeyFromIDMap[`${contentHeaderID}`] = contentKey; // Add header id to map
 
-            if(contentKey.includes("11IMG11"))
-            {
-                contentID = `${sectionID}11IMG11${globalFinalCategoryID}`; 
-                contentClass = "imgContent p-1 ml-3 mb-3 align-self-center"; 
-                
-                ImageSizes(`${response[i]}`, contentID); 
+        if (contentKey.includes("11IMG11")) {
+            contentID = `${sectionID}11IMG11${globalFinalCategoryID}`;
+            contentClass = "imgContent p-1 ml-3 mb-3 align-self-center";
 
-                AddDataHTML(`<img src="../data/images/${response[i]}" class="${contentClass} hasContextMenu d-flex" 
+            ImageSizes(`${response[i]}`, contentID);
+
+            AddDataHTML(`<img src="../data/images/${response[i]}" class="${contentClass} hasContextMenu d-flex" 
                     alt="${response[i]}" id="${contentID}" style="${contentStyle}"></img>`);
 
-            }
-            else if(contentKey.includes("11HEAD11"))
-            {
-                contentID = `${sectionID}11HEAD11${globalFinalCategoryID}`; 
-                contentClass = "headerContent"; 
+        }
+        else if (contentKey.includes("11HEAD11")) {
+            contentID = `${sectionID}11HEAD11${globalFinalCategoryID}`;
+            contentClass = "headerContent";
 
-                AddDataHTML(`<h5 class="${contentClass} hasContextMenu d-flex pl-1 ml-3 font-weight-bold justify-content-left" 
+            AddDataHTML(`<h5 class="${contentClass} hasContextMenu d-flex pl-1 ml-3 font-weight-bold justify-content-left" 
                                 id="${contentID}">${response[i]}</h5>`);
 
-            } else if (contentKey.includes("11LINK11"))
-            {
-                contentID = `${sectionID}11LINK11${globalFinalCategoryID}`; 
-                contentClass = "linkContent link-primary"; 
+        } else if (contentKey.includes("11LINK11")) {
+            contentID = `${sectionID}11LINK11${globalFinalCategoryID}`;
+            contentClass = "linkContent link-primary";
 
-                AddDataHTML(`<a class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 font-weight-bold justify-content-center" 
+            AddDataHTML(`<a class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 font-weight-bold justify-content-center" 
                                 id="${contentID}">${response[i]}</a>`);
 
-            } else if (contentKey.includes("11CODE11")) // Not doing "code" as well as will move the code
-            {
-                contentID = `${sectionID}11CODE11${globalFinalCategoryID}`; 
-                contentClass = "codeContent";
-                // going to use highlight.js for this
-                contentStyle = `white-space: pre-wrap;`; // Whitespace prewrap enables the /t and /n for tabs and newlines
+        } else if (contentKey.includes("11CODE11")) // Not doing "code" as well as will move the code
+        {
+            contentID = `${sectionID}11CODE11${globalFinalCategoryID}`;
+            contentClass = "codeContent";
+            // going to use highlight.js for this
+            contentStyle = `white-space: pre-wrap;`; // Whitespace prewrap enables the /t and /n for tabs and newlines
 
-                AddDataHTML(`<code class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 justify-content-center" id="${contentID}" style="${contentStyle}">${response[i]}</code>`);
+            AddDataHTML(`<code class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3 justify-content-center" id="${contentID}" style="${contentStyle}">${response[i]}</code>`);
 
-            }else // otherwise jsut display as text
-            {
-                contentID = `${sectionID}11PARA11${globalFinalCategoryID}`; 
-                contentClass = "paragraphContent";
-                contentStyle = `white-space: pre-wrap;`;
+        } else // otherwise jsut display as text
+        {
+            contentID = `${sectionID}11PARA11${globalFinalCategoryID}`;
+            contentClass = "paragraphContent";
+            contentStyle = `white-space: pre-wrap;`;
 
-                AddDataHTML(`<div class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3" id="${contentID}" style="${contentStyle}">${response[i]}</div>`);
-            }
-
-            
-
-            globalKeyFromIDMap[contentID] = contentKey; 
-            
-
-            num++; 
+            AddDataHTML(`<div class="${contentClass} hasContextMenu d-flex p-1 ml-3 mb-3" id="${contentID}" style="${contentStyle}">${response[i]}</div>`);
         }
-        
-        // text context menu event listener
-        $(`.hasContextMenu`).contextmenu(DisplayContentContextMenu);
 
-    });
-}
 
-async function GetContentFromFile(category, subCategory, FinalCategory)
-{
-    return new Promise(resolve => {
 
-		fs.readFile("data/MyNotesJson.txt", 'utf8', function (err, notes) {
-			if (err) {
-				console.log("An error has occurred opening json storage file: " + err);
-			}
-			else {
-			
-                // Parse return data and return relevant section
-                let parsedNotes = JSON.parse(notes); 
+        globalKeyFromIDMap[contentID] = contentKey;
 
-				resolve (parsedNotes[category][subCategory][FinalCategory]); 
-			} 
-		})
-	})
+
+        num++;
+    }
+
+    // text context menu event listener
+    $(`.hasContextMenu`).contextmenu(DisplayContentContextMenu);
+
+
 }
 
 function ImageSizes(source, id)

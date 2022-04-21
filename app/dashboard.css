@@ -101,21 +101,9 @@ body {
 
 
 /* Page Content  */
-.contentHeader {
+.fileTabs {
+    
+  cursor: pointer;
+
 }
 
-.paragraphContent {
-  
-}
-
-.headerContent {
-  
-}
-
-.codeContent {
-  
-}
-
-.imgContent {
-  
-}

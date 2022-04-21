@@ -86,3 +86,21 @@ function MakeID(length, stringToID) {
 function RemoveSpaces(str){
     return str.replace(/[^a-zA-Z]/g, ""); 
 }
+
+async function GetJSONFromFile(file)
+{
+    return new Promise(resolve => {
+
+		fs.readFile(file, 'utf8', function (err, notes) {
+			if (err) {
+				console.log("An error has occurred opening json file: " + err);
+			}
+			else {
+                // Parse return data and save to global variable
+                parsedJSON = JSON.parse(notes); 
+
+				resolve (parsedJSON); 
+			} 
+		})
+	})
+}

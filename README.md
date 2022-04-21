@@ -20,28 +20,31 @@ ctrl + r from within app or view -> reload
 -- To do --
 
 Current job
-6-feature. Format the return values so that it looks like a blog page.
+6-feature. Allow multiple notes files. And so you can select which one from inside the application. Can you save the
+users information and which document they had open last? Even which page? Needs to get the file name and use as a link.
+May need a cache file to store settings and get settings.
 
-Commit
-"Formatted more in style of modern blog page
+commit 
+"Enabled multiple file use. Tabs along the top of the app now show all the notes files and you can switch between them. 
+Created a settings file which stores the last opened text file for when the app is reset. Also stores the last opened
+categories if needed. Changed how globalParsedNotes works and removed functions that opened files when the data was
+already stored.
 
-Moved the headers to left-align. Change the categories to display faded and vertically. Changed the font of the title.
-"
 
 Next job =: 
 
-Sort backups
-1-bug. There seems to be an issue with adding a category name with a period in it. 
-1-feature. Allow multiple notes files. And so you can select which one from inside the application. Can you save the
-users information and which document they had open last? Even which page?
-
- 
+Sort backups - have put one in onedrive
+1-bug. Sometimes the delete category button is unresponsive. 
+2-feature. Create new notes file. 
 
 Future:
+1. Test with other files
 2. Enable reorganise of content?
 3. Enable bold, italics, underline?
 4. Enable dark mode?
 5. Have this as a module that can be used in other products. So can have this as a tab in Trading app.
+6. Publish as app
+7. Output section as word file. Output entirety as pdf or word file. 
 
 
 -- End of To do --

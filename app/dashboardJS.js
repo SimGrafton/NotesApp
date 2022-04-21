@@ -1,1 +1,0 @@
-AddDataHTML(`<div class="d-flex justify-content-center p-5">Welcome to Notes App!</div>`); 
