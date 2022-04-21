@@ -20,36 +20,31 @@ ctrl + r from within app or view -> reload
 -- To do --
 
 Current job
-4-feature. Add more available content. Including images. Code. Headers. Links.
-Restructure how adding new content works. 
+6-feature. Allow multiple notes files. And so you can select which one from inside the application. Can you save the
+users information and which document they had open last? Even which page? Needs to get the file name and use as a link.
+May need a cache file to store settings and get settings.
 
-Add further content:
-Add Image Section
-Add links sections
-
-Commit message: 
-"Enabled adding, deleting and editing Header Content. Created global so that keys for the json file could
-be identified by the IDs. Restructured how Adding content works. Enabled additions of code sections. Added a very
-simple img content adding feature. 
-
-Unable to add a header section as content. Getting the keys was becoming complex and looked awful. Adding content was
-done with individual functions for each type of content, which was messy and repeated code. 
-
-Added in functionality to the Add header selection on the context menu for the page content. Created a global object
-to store the id/ key values as getting keys for the json file was getting messy. Created an adding content function 
-to handle adding all types of content. "
-
+commit 
+"Enabled multiple file use. Tabs along the top of the app now show all the notes files and you can switch between them. 
+Created a settings file which stores the last opened text file for when the app is reset. Also stores the last opened
+categories if needed. Changed how globalParsedNotes works and removed functions that opened files when the data was
+already stored.
 
 
 Next job =: 
-6-feature. Enable highlight.js for the code entries. use npm to install.
-5-feature. Format the return values so that it looks like a blog page.
-1-bug. There seems to be an issue with adding a category name with a period in it. 
- 
+
+Sort backups - have put one in onedrive
+1-bug. Sometimes the delete category button is unresponsive. 
+2-feature. Create new notes file. 
 
 Future:
-1. Enable pictures to be included.
+1. Test with other files
 2. Enable reorganise of content?
+3. Enable bold, italics, underline?
+4. Enable dark mode?
+5. Have this as a module that can be used in other products. So can have this as a tab in Trading app.
+6. Publish as app
+7. Output section as word file. Output entirety as pdf or word file. 
 
 
 -- End of To do --

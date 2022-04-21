@@ -1,9 +1,5 @@
-// Runs after inclusion
-LoadCategoriesIntoSidebar(); 
-
 // Declare globals
-
-var parsedNotes; // the notes in parsed json returned from opening the main file
+var globalParsedNotes; // the notes in parsed json returned from opening the main file
 
 var globalCategoryMap = []; // Object which contains every category by it's id, so that the details can be found by searching for the ID only, 
 // instead of navigating through divs and adding all the details to each div
@@ -25,7 +21,7 @@ var globalNum = 10000;
 
 var globalCategoryNumberCheck; 
 
-async function LoadCategoriesIntoSidebar()
+async function LoadCategoriesIntoSidebar(file)
 {
 
     RefreshGlobals();
@@ -33,7 +29,11 @@ async function LoadCategoriesIntoSidebar()
 
     $(`#collapseNotes`).html(``); 
     
-    await GetCategories().then(function(response){
+    await GetJSONFromFile(`data/${file}`).then(function(response){
+
+        // Set the global parsed notes which is used as the main json file and kept as fully updated to be used to update json file
+        globalParsedNotes = response; 
+
         let catCount = 0;
         let subCatCount = 500;
         let finalCatCount = 1000;
@@ -163,7 +163,7 @@ function AddCategoryEventListeners()
 
 function RefreshGlobals()
 {
-    parsedNotes = "";
+    globalParsedNotes = "";
 
     globalCategoryMap = [];
     globalSubCategoryMap = [];
@@ -406,7 +406,7 @@ function AddNewCategory()
 
 function DeleteCategory() 
 {
-    console.log("Deleting button clicked");
+    //console.log("Deleting button clicked");
     //if (confirm(`are you sure you want to delete category ${globalCategoryName}?`)) { // This was causing the focus to be removed when adding new category after deleting
         $(`#${globalID}`).remove();
         $(`#subCategoriesOf${globalID}`).remove();
@@ -569,27 +569,6 @@ function DisplayCategoryPage(){
 
 }
 
-// Gets all the categories from the json file
-async function GetCategories()
-{
-    return new Promise(resolve => {
-
-		let categories = []; 
-
-		fs.readFile("data/MyNotesJson.txt", 'utf8', function (err, notes) {
-			if (err) {
-				console.log("An error has occurred opening json storage file: " + err);
-			}
-			else {
-                // Parse return data and save to global variable
-                parsedNotes = JSON.parse(notes); 
-
-				resolve (parsedNotes); 
-			} 
-		})
-	})
-}
-
 function AddCategory(category, categoryID, categoryDropdownID)
 {
     $("#collapseNotes").append(
@@ -674,7 +653,7 @@ function RefreshCategories()
     let categoryType = globalCategoryType;
     let categoryID = globalCategoryID; 
     let subCategoryID = globalSubCategoryID;
-    LoadCategoriesIntoSidebar(); 
+    LoadCategoriesIntoSidebar(globalCurrentFile); 
 
     setTimeout(function () {
         ReOpenCategoryDropdowns(categoryType, categoryID, subCategoryID)
