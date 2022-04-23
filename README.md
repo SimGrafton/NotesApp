@@ -20,29 +20,32 @@ ctrl + r from within app or view -> reload
 -- To do --
 
 Current job
-6-feature. Allow multiple notes files. And so you can select which one from inside the application. Can you save the
-users information and which document they had open last? Even which page? Needs to get the file name and use as a link.
-May need a cache file to store settings and get settings.
+2-feature. Create new notes file. Delete notes file.
+
+
 
 commit 
-"Enabled multiple file use. Tabs along the top of the app now show all the notes files and you can switch between them. 
-Created a settings file which stores the last opened text file for when the app is reset. Also stores the last opened
-categories if needed. Changed how globalParsedNotes works and removed functions that opened files when the data was
-already stored.
+"Added button next to file tabs to add a new file. Added a context menu to the tabs so that you can delete a file."
 
 
 Next job =: 
 
+Test for a while
+Publish as app
 Sort backups - have put one in onedrive
-1-bug. Sometimes the delete category button is unresponsive. 
-2-feature. Create new notes file. 
+1-bug. Sometimes the delete category button is unresponsive.
+1-improvement. Add proper button icons for all the context menu options. 
 
 Future:
-1. Test with other files
+1. Enable dark mode
+2. Enable status section. This will show yellow when doing something and will have a dropdown that shows more details.
+Green then when everything is a okay. Or could be like a loading symbol. 
 2. Enable reorganise of content?
 3. Enable bold, italics, underline?
 4. Enable dark mode?
 5. Have this as a module that can be used in other products. So can have this as a tab in Trading app.
+So there should be a main app, which is just the electron. Then you can add modules, which is essentially just
+adding an index page. For this to work, the modules would have to not clash.
 6. Publish as app
 7. Output section as word file. Output entirety as pdf or word file. 
 

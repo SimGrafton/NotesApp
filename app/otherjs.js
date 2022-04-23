@@ -104,3 +104,21 @@ async function GetJSONFromFile(file)
 		})
 	})
 }
+
+function VerfifyTextEntry(text)
+{
+    if(text.length < 1)
+    {
+        OutputError("Please enter text");
+        return false;
+    }
+
+    if(text.length > 20)
+    {
+        OutputError("Please enter less than 20 characters");
+        return false;
+    }
+
+    return true; 
+    
+}
