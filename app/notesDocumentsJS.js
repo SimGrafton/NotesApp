@@ -186,6 +186,12 @@ function DisplayTabContextMenu(e){
     {
         DeleteFile(id);
     }); 
+
+    $(`#menu`).append(`<a href="#" id="btnBackupFiles"><img src="icons/icons8-edit-50.png" />Backup all files</a>`);
+    $(`#btnBackupFiles`).click(function()
+    {
+        BackupFiles();
+    }); 
 }
 
 function DeleteFile(id)
@@ -198,3 +204,16 @@ function DeleteFile(id)
 
     
 }
+
+function BackupFiles()
+{
+    // Copy data folder into dataBackups folder
+    for(let i in globalFileNames)
+    {
+        fs.copyFile(`data/${globalFileNames[i]}`, `dataBackups/backup${globalFileNames[i]}`, (err) => {
+            if (err) throw err;
+            console.log('File was copied to destination');
+          });
+    }
+}
+    

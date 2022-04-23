@@ -20,13 +20,12 @@ ctrl + r from within app or view -> reload
 -- To do --
 
 Current job
-2-feature. Create new notes file. Delete notes file.
+2-feature. Add button to backup all files
 
 
 
 commit 
-"Added button next to file tabs to add a new file. Added a context menu to the tabs so that you can delete a file."
-
+"
 
 Next job =: 
 
