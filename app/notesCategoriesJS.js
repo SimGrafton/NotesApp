@@ -29,7 +29,13 @@ async function LoadCategoriesIntoSidebar(file)
 
     $(`#collapseNotes`).html(``); 
     
-    await GetJSONFromFile(`data/${file}`).then(function(response){
+    await GetJSONFromFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/${file}`).then(function(response){
+
+        // If no notes in file, just return
+        if(response == "{}")
+        {
+            return; 
+        }
 
         // Set the global parsed notes which is used as the main json file and kept as fully updated to be used to update json file
         globalParsedNotes = response; 

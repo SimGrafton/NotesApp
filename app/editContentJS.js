@@ -167,27 +167,28 @@ function GetNewContentInputHTML(contentCategory, headerOrContent)
         // html for a new paragraph entry box
         if (contentCategory == "paragraphContent")
         {
-            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;">Enter Content</textarea>`;
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;" placeholder="Enter Content"></textarea>`;
         }
 
         if (contentCategory == "headerContent")
         {
-            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;">Enter Header</textarea>`; 
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;" placeholder="Enter Header"></textarea>`; 
         }
 
         if (contentCategory == "codeContent")
         {
-            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;">Enter Code</textarea>`;
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="10" style="min-width: 100px;" placeholder="Enter Code"></textarea>`;
         }
 
         if (contentCategory == "imgContent")
         {
-            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px;">Enter image filename</textarea>`;
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px;" placeholder="Enter image filename with filetype. File must 
+            be in data/images file (e.g "fileName.jpg")"></textarea>`;
         }
 
         if (contentCategory == "linkContent")
         {
-            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px;">Enter link address</textarea>`;
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px placeholder="Enter link address"></textarea>`;
         }
     }
 

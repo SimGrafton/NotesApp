@@ -36,7 +36,7 @@ async function UpdateJsonFile(updatedJson){
 
         let status = false; 
 
-		fs.writeFile(`data/${globalCurrentFile}`, JSON.stringify(updatedJson), function (err) {
+		fs.writeFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/${globalCurrentFile}`, JSON.stringify(updatedJson), function (err) {
 			if (err) {
                 console.log("An error has occurred opening json storage file: " + err);
                 

@@ -1,21 +1,76 @@
 // This doc manages the json files, imports the names into the app and opens different notes files
 
+const fs = require('fs'); 
+
  // Needs to read all the .json files with Data, display the file titles in the title bar and open when you click one.
 LoadFilesAndTabs(); 
 var globalCurrentFile; 
-var globalSettings; 
+var globalSettings = {
+    "currentFile":"",
+    "currentCategory":"",
+    "currentSubCategory":"",
+    "currentFinalCategory":""};
 var globalFileNames; 
+
+// Get the path of user into globalUserPath
+GetHomePath(); 
+
 async function LoadFilesAndTabs()
 {
     // Clear tabs
 
+    if(!globalUserPath) // If GetHomePath() has not yet set the users path then do not continue.
+    {
+
+        console.log("Awaiting receipt of users documents path"); 
+        setTimeout(function () {
+            GetHomePath(); 
+            LoadFilesAndTabs(); 
+        }, 2000);
+        return; 
+    };
+
     $(`#navTabs`).empty(); 
 
     const getFilesPromise = GetFiles(); 
-    const getSettingsPromise = GetJSONFromFile("app/settings.txt"); 
+    const getSettingsPromise = GetJSONFromFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`); 
 
     Promise.all([getFilesPromise, getSettingsPromise]).then(function(values){
+
+        // values[0] should be the data files as an array and values[1] should be settings file as json
+
+        // If no data file, create
+        if(!values[0])
+        {
+            // Should mean this is the first time start, so need to create the folders and restart process      
+            FirstTimeSetupAndRestart(); 
+            return; 
+        }
     
+        // If no settings file, create
+        if(!values[1])
+        {
+            // Create settings file
+            let data = {
+                "currentFile":"",
+                "currentCategory":"",
+                "currentSubCategory":"",
+                "currentFinalCategory":""};
+            CreateFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`, data);
+        }
+
+        // If no files then returns
+        if(values[0].length == 0)
+        {
+            
+                // Add icon for adding new file
+            $(`#navTabs`).append(`<li class=""><a class="clickCursor" id="addNewFile" title="Add new notes file"><img src="icons/addWhite.png" style="height: 20px;" /></a></li>`); 
+
+            // Set event listeners
+            $(`#addNewFile`).click(AddNewFile);
+            return; 
+        }
+
         // Set the tabs as the different files names
 
         // Remove the .txt or .json
@@ -23,7 +78,8 @@ async function LoadFilesAndTabs()
         let fileNames = []; 
         values[0].forEach(function(file){
             fileNames.push(RemoveFileSuffix(file));
-        })
+        });
+
 
         // Load the fileNames as links in tabs
         let p = 0; 
@@ -37,21 +93,23 @@ async function LoadFilesAndTabs()
         // Add icon for adding new file
         $(`#navTabs`).append(`<li class=""><a class="clickCursor" id="addNewFile" title="Add new notes file"><img src="icons/addWhite.png" style="height: 20px;" /></a></li>`); 
 
-
-        globalSettings = values[1];
-        // Add class "active" to a section if current. Check from the settings
-        let id = RemoveFileSuffix(values[1]["currentFile"]); 
-        $(`#${id}`).addClass(`active`);
-
         // Set event listeners
         $(`.fileTabs`).click(OpenFile); 
         $(`#addNewFile`).click(AddNewFile);
         $(`.fileTabs`).contextmenu(DisplayTabContextMenu); 
 
-        globalCurrentFile = values[1]["currentFile"]; 
+        if(values[1])
+        {
+            globalSettings = values[1];
 
-        LoadCategoriesIntoSidebar(values[1]["currentFile"]); 
+            // Add class "active" to a section if current. Check from the settings
+            let id = RemoveFileSuffix(values[1]["currentFile"]); 
+            $(`#${id}`).addClass(`active`);
 
+            globalCurrentFile = values[1]["currentFile"]; 
+
+            LoadCategoriesIntoSidebar(values[1]["currentFile"]); 
+        }
     }); 
 
 }
@@ -62,25 +120,35 @@ async function GetFiles()
     return new Promise(resolve => {
 
         // joining path of directory 
-        const directoryPath = path.join(".", 'data');
+        //const directoryPath = path.join(".", 'data');
         // passsing directoryPath and callback function
-        fs.readdir(directoryPath, function (err, files) {
+        fs.readdir(`${globalUserPath}/Documents/MyLocalNotesApp/data`, function (err, files) {
             // handling error
             if (err) {
-                resolve (console.log('Unable to scan directory: ' + err));
+                console.log(`Unable to scan directory. The error is: ` + err)
+                resolve (false);
             } 
 
             // listing all files using forEach
             let filesUpdated = []; 
-            files.forEach(function (file) {
-                // If it's a .txt or json file then add to array
-                if(file.includes(`.txt`)||file.includes(`.json`))
-                {
-                    filesUpdated.push(file);
-                }
-            });
+            if(files == undefined)
+            {
+                resolve(false);
+            }
+            else 
+            {
+                files.forEach(function (file) {
+                    // If it's a .txt or json file then add to array
+                    if(file.includes(`.txt`)||file.includes(`.json`))
+                    {
+                        filesUpdated.push(file);
+                    }
+                });
+                
+                resolve (filesUpdated); 
+            }
             
-            resolve (filesUpdated); 
+            
 
         });
 		
@@ -137,16 +205,22 @@ function SubmitAddNewFile()
         return; 
     }
 
+    // Remove spaces and letters
+    newNotesFileName = RemoveSpaces(newNotesFileName);
+
     // Add suffix
     newNotesFileName += ".txt"; 
 
     // Check if file exists
-    if(globalFileNames.includes(newNotesFileName))
+    if(globalFileNames)
     {
-        OutputError("File exists");
-        return; 
+        if(globalFileNames.includes(newNotesFileName))
+        {
+            OutputError("File exists");
+            return; 
+        }
     }
-
+    
     // Use title to create file in data dir
     // Set globalCurrentFile
     globalCurrentFile = newNotesFileName; 
@@ -196,9 +270,9 @@ function DisplayTabContextMenu(e){
 
 function DeleteFile(id)
 {
-    console.log(id)
+    globalFileNames.splice(globalFileNames.indexOf(id), 1);
 
-    fs.unlink(`data/${id}`, function(){
+    fs.unlink(`${globalUserPath}/Documents/MyLocalNotesApp/data/${id}`, function(){
         LoadFilesAndTabs();  
     }); 
 
@@ -210,10 +284,21 @@ function BackupFiles()
     // Copy data folder into dataBackups folder
     for(let i in globalFileNames)
     {
-        fs.copyFile(`data/${globalFileNames[i]}`, `dataBackups/backup${globalFileNames[i]}`, (err) => {
+        fs.copyFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/${globalFileNames[i]}`, `${globalUserPath}/Documents/MyLocalNotesApp/dataBackups/backup${globalFileNames[i]}`, (err) => {
             if (err) throw err;
             console.log('File was copied to destination');
           });
     }
 }
     
+async function FirstTimeSetupAndRestart()
+{
+
+    // Create data folder with subfolder of userSettings then restart process
+
+    globalUserPath; 
+
+    await fs.promises.mkdir(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings`, { recursive: true }).then(function(){
+        LoadFilesAndTabs(); 
+    });
+}

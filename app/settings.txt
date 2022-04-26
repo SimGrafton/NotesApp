@@ -1,1 +1,0 @@
-{"currentFile":"MyNotesJson.txt","currentCategory":"First cat","currentSubCategory":"dsd","currentFinalCategory":"sds"}

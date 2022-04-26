@@ -13,7 +13,7 @@ async function UpdateJson(updatedSettings)
 
         let status = false; 
 
-		fs.writeFile(`app/settings.txt`, JSON.stringify(updatedSettings), function (err) {
+		fs.writeFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`, JSON.stringify(updatedSettings), function (err) {
 			if (err) {
                 console.log("An error has occurred opening settings file to update: " + err);
                 
