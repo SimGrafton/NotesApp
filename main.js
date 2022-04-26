@@ -10,8 +10,9 @@ const config = require(path.join(__dirname, 'package.json'))
 const BrowserWindow = electron.BrowserWindow
 
 //app.setName(config.productName)
-var mainWindow = null
+var mainWindow = null;
 
+var pathy = app.getPath('home');
 
 app.on('ready', function () {
   mainWindow = new BrowserWindow({
@@ -21,6 +22,7 @@ app.on('ready', function () {
     backgroundColor: 'lightgray',
     title: config.productName,
     show: false,
+    icon: `${__dirname}/app/icons/NotesAppIcon.png`, 
     webPreferences: {
       nodeIntegration: true,
       defaultEncoding: 'UTF-8',
@@ -33,14 +35,14 @@ app.on('ready', function () {
   })
 
   // Open dev tools
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools();
 
   // Load html
   mainWindow.loadURL(`file://${__dirname}/app/index.html`)
 
   mainWindow.once('ready-to-show', () => {
     //mainWindow.setMenu(null)
-    mainWindow.show()
+    mainWindow.show(); 
   })
 
   mainWindow.on('closed', function () {
@@ -75,6 +77,16 @@ app.on('ready', function () {
   // Focus on main window
   ipcMain.on('focusWindow', () => {
     mainWindow.focus(); 
+  })
+
+  // Get Path of Desktop
+  ipcMain.on('getDesktopPath', () => {
+    mainWindow.webContents.send('pathy', pathy);
+  })
+
+  // Open dev tools
+  ipcMain.on('openDevTools', () => {
+    mainWindow.webContents.openDevTools();
   })
 
 })

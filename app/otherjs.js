@@ -93,7 +93,8 @@ async function GetJSONFromFile(file)
 
 		fs.readFile(file, 'utf8', function (err, notes) {
 			if (err) {
-				console.log("An error has occurred opening json file: " + err);
+				console.log("Unable to open json file: " + err);
+                resolve(false);
 			}
 			else {
                 // Parse return data and save to global variable
@@ -121,4 +122,20 @@ function VerfifyTextEntry(text)
 
     return true; 
     
+}
+
+async function CreateFile(path, content)
+{
+    return new Promise(resolve => {
+
+		fs.writeFile(path, JSON.stringify(content), function (err) {
+			if (err) {
+                console.log("An error has occurred creating file: " + err);
+                resolve (false);
+			}
+			else {
+				resolve (true); 
+			} 
+		})
+	})
 }

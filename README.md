@@ -16,24 +16,53 @@ ctrl + r from within app or view -> reload
 
 -- End of App Use --
 
+-- Building .exe --
+
+Installed - "npm install electron-packager -g"
+electron-packager NotesApp notesapp --platform=win32 --arch=x64 --overwrite --icon=NotesApp/NotesAppIcon.ico --out="C:\Program Files (x86)\MyLocalNotesApplication"
+
+-- End of Building .exe --
+
+-- Packaging file into installer --
+Use installForge
+Add files
+Product Name = "MyLNotes"
+System - shortcuts to create shortcut
+-- Building .exe --
 
 -- To do --
 
 Current job
-2-feature. Add button to backup all files
-
+1-publish. Publish as app.
 
 
 commit 
-"
+"Created installforge file for packaging into installer. Tested with electron-packager and made node and npm changes
+to ensure packagable and to address errors, for example with the file system plugin which is now included in node.js.
+Cleaned up files  and made changes to location of users files and backups. Notes files are now in the users documents. 
+Created function to get the users folder on pc.
 
 Next job =: 
 
 Test for a while
-Publish as app
-Sort backups - have put one in onedrive
+Create an msi to install file in specific location. Need to make sure the file has read & write access and 
+creates desktop shortcut. - Trying install forge.
+Change app icon
+Sort git backups - have put one in onedrive
 1-bug. Sometimes the delete category button is unresponsive.
 1-improvement. Add proper button icons for all the context menu options. 
+Change the top dropdown to be more dynamic, if you click off of it it needs to minimise. The 
+icons also needs to be set to not move if it drops down. 
+A check for updates button (then would need to have it hosted online).
+Automate the build package and installer creation process?
+Security, have something that checks a checksum before opening? Saying files appear to have been edited. Please 
+redownload.
+Create tests for everything you do. So create file, delete file, enter content etc.... Then can run all when you change
+something.
+Change icon so it isnt white
+Remove first dropdown of categories, it's clunky when you first start
+Change the design of the top tab bar
+Change layout of the category bar so that longer finalcategories are displayed better
 
 Future:
 1. Enable dark mode

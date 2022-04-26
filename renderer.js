@@ -8,6 +8,8 @@ const ipc = require('electron').ipcRenderer;
 
 var globalWindowSize; 
 
+var globalUserPath; 
+
 
 // Messages to main
 // Minimise Button
@@ -43,4 +45,18 @@ function FocusWindow()
 {
   console.log("focussing");
   ipc.send(`focusWindow`); 
+}
+
+function GetHomePath()
+{
+  ipc.send(`getDesktopPath`);
+}
+
+ipc.on('pathy', function (evt, pathy) {
+  globalUserPath = pathy; 
+});
+
+function OpenDevTools()
+{
+  ipc.send(`openDevTools`);
 }
