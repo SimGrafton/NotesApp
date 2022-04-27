@@ -147,7 +147,9 @@ async function LoadCategoriesIntoSidebar(file)
         }
 
         // Event Listeners
-        AddCategoryEventListeners(); 
+        AddCategoryEventListeners();
+
+
 
     })
 
@@ -165,6 +167,25 @@ function AddCategoryEventListeners()
     $(`.finalCategory`).contextmenu(DisplayContextMenu); 
 
     $(`.btnCategoryHeader`).contextmenu(DisplayHeaderContextMenu);
+
+    $(`.category`).click(SetCss); 
+
+    $(`.subCategory`).click(SetCss); 
+
+    $(`.finalCategory`).click(SetCss);
+
+}
+
+function SetCss()
+{
+    if($(`#${this.id}`).hasClass('font-weight-bold'))
+    {
+        $(`#${this.id}`).removeClass('font-weight-bold');
+    }
+    else{
+        $(`#${this.id}`).addClass('font-weight-bold');
+    }
+    
 }
 
 function RefreshGlobals()
@@ -578,8 +599,9 @@ function DisplayCategoryPage(){
 function AddCategory(category, categoryID, categoryDropdownID)
 {
     $("#collapseNotes").append(
-        `<button class="category btn btn-light btn-sm ml-4 p-0 text-left w-50" id ="${categoryID}" value="${category}" type="button" 
-        data-toggle="collapse" data-target="#${categoryDropdownID}" aria-expanded="false" aria-controls="${categoryDropdownID}" name="category">
+        `<button class="category btn btn-light btn-sm ml-1 p-0 text-left mb-1 w-50" id ="${categoryID}" value="${category}" type="button" 
+        data-toggle="collapse" data-target="#${categoryDropdownID}" aria-expanded="false" aria-controls="${categoryDropdownID}" name="category"
+        style="color:rgb(58, 58, 196);">
             ${category}
         </button>
         <div class="collapse" id="${categoryDropdownID}" value="${category}" ></div>`);
@@ -588,8 +610,9 @@ function AddCategory(category, categoryID, categoryDropdownID)
 function AddSubCategory(subCategory, subCategoryID, categoryDropdownID, finalCategoryDropdownID){
 
     $(`#${categoryDropdownID}`).append(`
-    <button class="subCategory btn btn-light btn-sm ml-5 p-0 mb-1 text-left w-50" id ="${subCategoryID}" value="${subCategory}" type="button" 
-    data-toggle="collapse" data-target="#${finalCategoryDropdownID}" aria-expanded="false" aria-controls="${finalCategoryDropdownID}" name="subCategory">
+    <button class="subCategory btn btn-light btn-sm ml-3 p-0 mb-2 text-left w-50" id ="${subCategoryID}" value="${subCategory}" type="button" 
+    data-toggle="collapse" data-target="#${finalCategoryDropdownID}" aria-expanded="false" aria-controls="${finalCategoryDropdownID}" name="subCategory"#
+    style="color:rgb(58, 58, 196);">
         ${subCategory}
     </button>
     <div class="collapse" id="${finalCategoryDropdownID}" value="${subCategory}" ></div>`)
@@ -598,7 +621,8 @@ function AddSubCategory(subCategory, subCategoryID, categoryDropdownID, finalCat
 function AddFinalCategory(finalCategory, finalCategoryID, finalCategoryDropdownID){
     
     $(`#${finalCategoryDropdownID}`).append(
-        `<button class="finalCategory btn btn-light btn-sm ml-5 p-0 text-left mb-1 w-50" id ="${finalCategoryID}" value="${finalCategory}" name="finalCategory">
+        `<button class="finalCategory btn btn-light btn-sm ml-4 p-0 text-left mb-1 w-80" id ="${finalCategoryID}" value="${finalCategory}" name="finalCategory"
+        style="color:rgb(58, 58, 196);">
             <div class="ml-2" >${finalCategory}</div>
         </button>`);
 }

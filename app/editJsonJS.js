@@ -36,6 +36,13 @@ async function UpdateJsonFile(updatedJson){
 
         let status = false; 
 
+        // check its valid json
+        if(!isJsonString(JSON.stringify(updatedJson)))
+        {
+            console.log("error, entry has met an error and become invalid json. Please wait a second and try again.");
+            resolve(status);
+        }
+
 		fs.writeFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/${globalCurrentFile}`, JSON.stringify(updatedJson), function (err) {
 			if (err) {
                 console.log("An error has occurred opening json storage file: " + err);

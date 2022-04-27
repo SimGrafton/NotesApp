@@ -17,7 +17,7 @@ GetHomePath();
 
 async function LoadFilesAndTabs()
 {
-    // Clear tabs
+    
 
     if(!globalUserPath) // If GetHomePath() has not yet set the users path then do not continue.
     {
@@ -26,11 +26,14 @@ async function LoadFilesAndTabs()
         setTimeout(function () {
             GetHomePath(); 
             LoadFilesAndTabs(); 
-        }, 2000);
+        }, 500);
         return; 
     };
 
+    // Clear tabs
+    
     $(`#navTabs`).empty(); 
+    
 
     const getFilesPromise = GetFiles(); 
     const getSettingsPromise = GetJSONFromFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`); 
@@ -173,6 +176,9 @@ function OpenFile()
 {
     // Get the id
     let id = this.id + ".txt"; 
+
+    // Close dropdown
+    $('#navBarButton').click();
     
     LoadCategoriesIntoSidebar(id);
     globalCurrentFile = id; 
