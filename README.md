@@ -41,26 +41,20 @@ System - shortcuts to create shortcut, add icon to shortcut
 
 Current job:
 1-improvement. 
-- Change the top bar so that if you add too many notes files that they move into the dropdown.
-- Change the top dropdown to be more dynamic, if you click off of it it needs to minimise. The 
-icons also needs to be set to not move if it drops down. Change the design of the top tab bar. 
-
-
+ 
 commit - 
-"Change top toggle bar drowndown to always stay as dropdown and aligned icons to right. Changed
-notes title above the categories to read the title of the notes. Changed the NotesApp name to My
-Local Notes App "
+"Fixed issue where short category names were appearing next to eachother. Fixed issue where only parts of the top
+navbar could be dragged to move window. Removed inspect element option. Changed app icon so it isnt white, 
+changed to yellow. Added proper button icons for all the context menu options. "
+
+
+
 
 Next jobs: 
 Allow the change of the notes location, so that you can use onedrive and sync the notes.
-Short categories are appearing on the same line
 Icon for shortcut isnt working
-drag needs to be whole top bar
-Remove inspect element
 1. Test for a while
-2. Change app icon so it isnt white
 3. 1-bug. Sometimes the delete category button is unresponsive.
-4. 1-improvement. Add proper button icons for all the context menu options. 
 
 Future jobs:
 1. Enable dark mode

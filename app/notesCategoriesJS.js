@@ -253,7 +253,7 @@ function DisplayContextMenu(e){
         globalCategoryName = globalCategoryMap[globalID].categoryName;
 
         // Add event listener to add button
-        $(`#menu`).append(`<a href="#" id="btnAddNewCategory"><img src="icons/icons8-edit-50.png" />Add New Subcategory</a>`);
+        $(`#menu`).append(`<a href="#" id="btnAddNewCategory"><img src="icons/add.png" />Add New Subcategory</a>`);
         $(`#btnAddNewCategory`).click(AddNewCategory); 
 
     } else if (globalCategoryType == "subCategory")
@@ -268,7 +268,7 @@ function DisplayContextMenu(e){
         $(`#addFinalCategory`).html(`Add new category to "${this.value}"`);
 
         // Add event listener to add button
-        $(`#menu`).append(`<a href="#" id="btnAddNewCategory"><img src="icons/icons8-edit-50.png" />Add New Subcategory</a>`);
+        $(`#menu`).append(`<a href="#" id="btnAddNewCategory"><img src="icons/add.png" />Add New Subcategory</a>`);
         $(`#btnAddNewCategory`).click(AddNewCategory); 
 
     } else if (globalCategoryType == "finalCategory")
@@ -284,9 +284,8 @@ function DisplayContextMenu(e){
    
     $(`#menu`).append(`<a href="#" class="btnEditContextMenu"><img src="icons/icons8-edit-50.png" /><div class="editCategory"></div></a>`);
     $(`#menu`).append(`<a href="#"><img src="icons/icons8-delete-24.png" /><div class="deleteCategory"></div></a>`);
-    $(`#menu`).append(`<a href="#" class="inspectElement"><img src="icons/add.png" />Inspect Element</a>`);
-    $(`#menu`).append(`<a href="#" class="reorderUp"><img src="icons/add.png" />Reorder Up</a>`);
-    $(`#menu`).append(`<a href="#" class="reorderDown"><img src="icons/add.png" />Reorder Down</a>`); 
+    $(`#menu`).append(`<a href="#" class="reorderUp"><img src="icons/upndown.png" />Reorder Up</a>`);
+    $(`#menu`).append(`<a href="#" class="reorderDown"><img src="icons/upndown.png" />Reorder Down</a>`); 
 
     // Add labels to context menu
     $(`.editCategory`).html(`Edit category name "${this.value}"`); 
@@ -297,9 +296,6 @@ function DisplayContextMenu(e){
 
     // Add event listener to delete button
     $(`.deleteCategory`).click(DeleteCategory); 
-
-    // Add event listener to inspect button
-    $(`.inspectElement`).click(ConsoleLogHTML); 
 
     // Add event listener to reorder buttons
     $(`.reorderDown`).click(ReorderCategoriesDown);
@@ -599,32 +595,32 @@ function DisplayCategoryPage(){
 function AddCategory(category, categoryID, categoryDropdownID)
 {
     $("#collapseNotes").append(
-        `<button class="category btn btn-light btn-sm ml-1 p-0 text-left mb-1 w-50" id ="${categoryID}" value="${category}" type="button" 
+        `<div class="row"><button class="category btn btn-light btn-sm p-0 text-left mb-1 w-80 col" id ="${categoryID}" value="${category}" type="button" 
         data-toggle="collapse" data-target="#${categoryDropdownID}" aria-expanded="false" aria-controls="${categoryDropdownID}" name="category"
         style="color:rgb(58, 58, 196);">
             ${category}
         </button>
-        <div class="collapse" id="${categoryDropdownID}" value="${category}" ></div>`);
+        <div class="collapse container" id="${categoryDropdownID}" value="${category}" ></div></div>`);
 }
 
 function AddSubCategory(subCategory, subCategoryID, categoryDropdownID, finalCategoryDropdownID){
 
     $(`#${categoryDropdownID}`).append(`
-    <button class="subCategory btn btn-light btn-sm ml-3 p-0 mb-2 text-left w-50" id ="${subCategoryID}" value="${subCategory}" type="button" 
+    <div class="row"><button class="subCategory btn btn-light btn-sm ml-3 p-0 mb-2 text-left w-80 col" id ="${subCategoryID}" value="${subCategory}" type="button" 
     data-toggle="collapse" data-target="#${finalCategoryDropdownID}" aria-expanded="false" aria-controls="${finalCategoryDropdownID}" name="subCategory"#
     style="color:rgb(58, 58, 196);">
         ${subCategory}
     </button>
-    <div class="collapse" id="${finalCategoryDropdownID}" value="${subCategory}" ></div>`)
+    <div class="collapse container" id="${finalCategoryDropdownID}" value="${subCategory}" ></div></div>`)
 }
 
 function AddFinalCategory(finalCategory, finalCategoryID, finalCategoryDropdownID){
     
     $(`#${finalCategoryDropdownID}`).append(
-        `<button class="finalCategory btn btn-light btn-sm ml-4 p-0 text-left mb-1 w-80" id ="${finalCategoryID}" value="${finalCategory}" name="finalCategory"
+        `<div class="row"><button class="finalCategory btn btn-light btn-sm ml-4 p-0 text-left mb-1 w-80 col" id ="${finalCategoryID}" value="${finalCategory}" name="finalCategory"
         style="color:rgb(58, 58, 196);">
             <div class="ml-2" >${finalCategory}</div>
-        </button>`);
+        </button></div>`);
 }
 
 // For context menu
@@ -660,10 +656,6 @@ function menu(x, y) {
 }
 
 // End of context menu
-
-function ConsoleLogHTML(){
-    console.log($(`#${globalID}`));
-}
 
 function RemoveEventListeners()
 {
