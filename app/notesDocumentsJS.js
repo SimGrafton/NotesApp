@@ -108,6 +108,7 @@ async function LoadFilesAndTabs()
             // Add class "active" to a section if current. Check from the settings
             let id = RemoveFileSuffix(values[1]["currentFile"]); 
             $(`#${id}`).addClass(`active`);
+            $(`#documentName`).html(`${id}:`); 
 
             globalCurrentFile = values[1]["currentFile"]; 
 
@@ -179,6 +180,9 @@ function OpenFile()
 
     // Close dropdown
     $('#navBarButton').click();
+
+    // Set title of categories to notes doc
+    $(`#documentName`).html(`${this.id}:`); 
     
     LoadCategoriesIntoSidebar(id);
     globalCurrentFile = id; 
