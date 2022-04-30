@@ -311,6 +311,11 @@ async function FirstTimeSetupAndRestart()
     globalUserPath; 
 
     await fs.promises.mkdir(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings`, { recursive: true }).then(function(){
-        LoadFilesAndTabs(); 
+
+        fs.mkdir(`${globalUserPath}/Documents/MyLocalNotesApp/data/images`, function()
+        {
+            LoadFilesAndTabs(); 
+        });
+        
     });
 }

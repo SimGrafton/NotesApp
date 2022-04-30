@@ -39,7 +39,7 @@ async function DisplayContent(category, subCategory, finalCategory){
 
             ImageSizes(`${response[i]}`, contentID);
 
-            AddDataHTML(`<img src="../data/images/${response[i]}" class="${contentClass} hasContextMenu d-flex" 
+            AddDataHTML(`<img src="${globalUserPath}/Documents/MyLocalNotesApp/data/images/${response[i]}" class="${contentClass} hasContextMenu d-flex" 
                     alt="${response[i]}" id="${contentID}" style="${contentStyle}"></img>`);
 
         }
@@ -96,5 +96,5 @@ function ImageSizes(source, id)
         //  alert(this.width + 'x' + this.height);
         $(`#${id}`).attr(`style`, `width: ${this.width}px; height: ${this.height}px;`); 
     }
-    img.src = `../data/images/${source}`;
+    img.src = `${globalUserPath}/Documents/MyLocalNotesApp/data/images/${source}`;
 }

@@ -42,9 +42,11 @@ System - shortcuts to create shortcut, add icon to shortcut
 Current job:
 1-improvement. 
  
+Enable a file selector when adding an image. Have the function copy the image into the documents file as well
+and then set the source as that directory.
+
 commit - 
-"Changed the refresh button to a settings button, now creates a menu with options. Has a refresh button. Have not 
-yet implemented the change dir location button as realised that onedrive would not work as cannot access to rewrite."
+""
 
 
 
@@ -56,9 +58,19 @@ yet implemented the change dir location button as realised that onedrive would n
 
 Next jobs:
 
+1. Create a new start page. Which has an introduction, shows all the features, including pictures, and explains how
+to do everything:
+- Where are your files located
+- How to create new files
+- How to create categories
+- How to add each content
+- How to backup
+- What features would you like? This is a very basic notes application I've made simply for my work notes.
+
 1. Test for a while
 3. 1-bug. Sometimes the delete category button is unresponsive.
 Icon for shortcut isnt working
+2. Remove the node modules not being used. It increases the install time. 
 
 Future jobs:
 1. Enable dark mode

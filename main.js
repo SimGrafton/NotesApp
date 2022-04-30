@@ -9,6 +9,8 @@ const path = require('path')
 const config = require(path.join(__dirname, 'package.json'))
 const BrowserWindow = electron.BrowserWindow
 
+const { dialog } = require('electron'); 
+
 //app.setName(config.productName)
 var mainWindow = null;
 
@@ -22,7 +24,7 @@ app.on('ready', function () {
     backgroundColor: 'lightgray',
     title: config.productName,
     show: false,
-    icon: `${__dirname}/app/icons/NotesAppIcon.png`, 
+    icon: `${__dirname}/NotesAppIcon.ico`, 
     webPreferences: {
       nodeIntegration: true,
       defaultEncoding: 'UTF-8',
@@ -87,6 +89,19 @@ app.on('ready', function () {
   // Open dev tools
   ipcMain.on('openDevTools', () => {
     mainWindow.webContents.openDevTools();
+  })
+
+  ipcMain.on('getFileDialog', () => {
+    
+    dialog.showOpenDialog(mainWindow, {
+      properties: ['openFile'],
+      filters: [  { name: 'Images', extensions: ['jpg', 'png', 'gif', 'jpeg'] }   ]
+    }).then(result => {
+      mainWindow.webContents.send('imageFileSelectResult', result);
+    }).catch(err => {
+      mainWindow.webContents.send('imageFileSelectResult', `error`);
+    })
+
   })
 
 })
