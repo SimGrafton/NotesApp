@@ -9,7 +9,8 @@ var globalSettings = {
     "currentFile":"",
     "currentCategory":"",
     "currentSubCategory":"",
-    "currentFinalCategory":""};
+    "currentFinalCategory":"",
+    "currentDir": ""};
 var globalFileNames; 
 
 // Get the path of user into globalUserPath
@@ -58,7 +59,8 @@ async function LoadFilesAndTabs()
                 "currentFile":"",
                 "currentCategory":"",
                 "currentSubCategory":"",
-                "currentFinalCategory":""};
+                "currentFinalCategory":"",
+                "currentDir": ""};
             CreateFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`, data);
         }
 

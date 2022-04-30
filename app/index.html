@@ -25,9 +25,14 @@
                 </button>
 
                 <!-- Icons utility bar on top right -->
-                <button class="reloadBtn btn" id="rBtn" style="-webkit-app-region: no-drag; margin-bottom: 7px; ">
-                    <img src="icons/refresh.png" width="20" />
+                <!-- <button class="settingBtn btn" id="rBtn" style="-webkit-app-region: no-drag; margin-bottom: 7px; ">
+                    <img src="icons/settings.png" width="20" />
+                </button> -->
+                <button class="navbar-toggler" type="button" id="settingsBarButton" data-toggle="collapse" data-target="#settingsDrop" aria-controls="settingsDrop" 
+                aria-expanded="false" aria-label="Toggle" style="-webkit-app-region: no-drag; ">
+                    <img src="icons/settings.png" width="20" />
                 </button>
+                
                 <button class="maxBtn btn" style="-webkit-app-region: no-drag; margin-bottom: 7px;">
                     <img src="icons/maximize.png" width="20" />
                 </button>
@@ -46,6 +51,17 @@
                 <ul class="navbar-nav mr-auto overflow-auto" id="navTabs" >
                     <!-- <li class="nav-item">
                         <a class="nav-link active" href="index.html">Notes<span class="sr-only">(current)</span></a>
+                    </li> -->
+                </ul>                
+            </div>
+
+            <div class="collapse navbar-collapse overflow-auto" id="settingsDrop" style="-webkit-app-region: no-drag; max-height: 200px;" > <!--  -->
+                <ul class="navbar-nav mr-auto overflow-auto" id="settingsTabs" >
+                    <h6 style = "color: rgb(175, 172, 172); ">Settings:</h6>
+                    <li class="nav-item">
+                        <button class="btn reloadBtn" style="color:rgb(150, 147, 147); "><img src="icons/refresh.png" width="20" /><font size="2">   Refresh app</font></button>
+                    <!-- <li class="nav-item">
+                        <button class="btn changeNotesDirBtn" style="color:rgb(150, 147, 147); "><img src="icons/icons8-edit-50.png" width="20" /><font size="2">   Change the file directory of the notes files</font></button>
                     </li> -->
                 </ul>                
             </div>
@@ -96,7 +112,6 @@
     <script src="editJsonJS.js"></script>
     <script src="editContentJS.js"></script>
     <script src="notesDocumentsJS.js"></script>
-    <script src="startJS.js"></script>
     
 </scripts>
 </html>

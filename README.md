@@ -43,18 +43,22 @@ Current job:
 1-improvement. 
  
 commit - 
-"Fixed issue where short category names were appearing next to eachother. Fixed issue where only parts of the top
-navbar could be dragged to move window. Removed inspect element option. Changed app icon so it isnt white, 
-changed to yellow. Added proper button icons for all the context menu options. "
+"Changed the refresh button to a settings button, now creates a menu with options. Has a refresh button. Have not 
+yet implemented the change dir location button as realised that onedrive would not work as cannot access to rewrite."
 
 
 
 
-Next jobs: 
-Allow the change of the notes location, so that you can use onedrive and sync the notes.
-Icon for shortcut isnt working
+
+
+
+
+
+Next jobs:
+
 1. Test for a while
 3. 1-bug. Sometimes the delete category button is unresponsive.
+Icon for shortcut isnt working
 
 Future jobs:
 1. Enable dark mode
