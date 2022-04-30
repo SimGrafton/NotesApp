@@ -3,15 +3,22 @@ async function UpdateSettingsFile(category, newValue)
 {
     globalSettings[category] = newValue;
 
-    UpdateJson(globalSettings);
+    UpdateSettingsJson(globalSettings);
     
 }
 
-async function UpdateJson(updatedSettings)
+async function UpdateSettingsJson(updatedSettings)
 {
     return new Promise(resolve => {
 
         let status = false; 
+
+		// check its valid json
+        if(!isJsonString(JSON.stringify(updatedSettings)))
+        {
+            console.log("error updating settings as json not valid. Settings not updated");
+            resolve(status);
+        }
 
 		fs.writeFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`, JSON.stringify(updatedSettings), function (err) {
 			if (err) {

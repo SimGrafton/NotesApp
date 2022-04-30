@@ -10,7 +10,6 @@ var globalWindowSize;
 
 var globalUserPath; 
 
-
 // Messages to main
 // Minimise Button
 $('.minBtn').on('click', e => {

@@ -9,7 +9,8 @@ var globalSettings = {
     "currentFile":"",
     "currentCategory":"",
     "currentSubCategory":"",
-    "currentFinalCategory":""};
+    "currentFinalCategory":"",
+    "currentDir": ""};
 var globalFileNames; 
 
 // Get the path of user into globalUserPath
@@ -17,7 +18,7 @@ GetHomePath();
 
 async function LoadFilesAndTabs()
 {
-    // Clear tabs
+    
 
     if(!globalUserPath) // If GetHomePath() has not yet set the users path then do not continue.
     {
@@ -26,11 +27,14 @@ async function LoadFilesAndTabs()
         setTimeout(function () {
             GetHomePath(); 
             LoadFilesAndTabs(); 
-        }, 2000);
+        }, 500);
         return; 
     };
 
+    // Clear tabs
+    
     $(`#navTabs`).empty(); 
+    
 
     const getFilesPromise = GetFiles(); 
     const getSettingsPromise = GetJSONFromFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`); 
@@ -55,7 +59,8 @@ async function LoadFilesAndTabs()
                 "currentFile":"",
                 "currentCategory":"",
                 "currentSubCategory":"",
-                "currentFinalCategory":""};
+                "currentFinalCategory":"",
+                "currentDir": ""};
             CreateFile(`${globalUserPath}/Documents/MyLocalNotesApp/data/userSettings/settings.txt`, data);
         }
 
@@ -105,6 +110,7 @@ async function LoadFilesAndTabs()
             // Add class "active" to a section if current. Check from the settings
             let id = RemoveFileSuffix(values[1]["currentFile"]); 
             $(`#${id}`).addClass(`active`);
+            $(`#documentName`).html(`${id}:`); 
 
             globalCurrentFile = values[1]["currentFile"]; 
 
@@ -173,6 +179,12 @@ function OpenFile()
 {
     // Get the id
     let id = this.id + ".txt"; 
+
+    // Close dropdown
+    $('#navBarButton').click();
+
+    // Set title of categories to notes doc
+    $(`#documentName`).html(`${this.id}:`); 
     
     LoadCategoriesIntoSidebar(id);
     globalCurrentFile = id; 

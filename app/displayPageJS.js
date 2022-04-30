@@ -10,14 +10,16 @@ async function DisplayContent(category, subCategory, finalCategory){
 
     let response = globalParsedNotes[category][subCategory][finalCategory];
 
-    AddDataHTML(`<h5 class="d-flex ps-3 pt-3 text-muted">${category}</h5>`);
-    AddDataHTML(`<h5 class="d-flex ps-4 pt-1 text-muted">${subCategory}</h5>`);
+    // AddDataHTML(`<h5 class="d-flex ps-3 pt-3 text-muted">${category}</h5>`);
+    // AddDataHTML(`<h5 class="d-flex ps-4 pt-1 text-muted">${subCategory}</h5>`);
     // Add Title + Edit Name + Delete + Add new category
-    AddDataHTML(`<h1 class="pageTitle hasContextMenu d-flex justify-content-center font-weight-bold" id="${globalFinalCategoryID}Title123" style="font-family: 'Times New Roman'">${finalCategory}</h1>`);
+    AddDataHTML(`<h1 class="pageTitle hasContextMenu d-flex justify-content-center font-weight-bold p-3" id="${globalFinalCategoryID}Title123" style="font-family: 'Times New Roman'">${finalCategory}</h1>`);
 
-    UpdateSettingsFile("currentCategory", category);
-    UpdateSettingsFile("currentSubCategory", subCategory);
-    UpdateSettingsFile("currentFinalCategory", finalCategory);
+    globalSettings["currentCategory"] = category; 
+    globalSettings["currentSubCategory"] = subCategory;
+    globalSettings["currentFinalCategory"] = finalCategory;
+
+    UpdateSettingsJson(globalSettings);
 
     num = 0;
     for (let i in response) {
