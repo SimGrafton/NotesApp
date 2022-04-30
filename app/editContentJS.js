@@ -56,6 +56,7 @@ function DisplayContentContextMenu(e)
     {
         globalContentID = this.id; 
         globalContentCategory = "imgContent"; 
+        $(`#btnEditDiv`).remove(); 
     }
     else if ($(this).hasClass("linkContent"))
     {
@@ -87,6 +88,7 @@ function DisplayContentContextMenu(e)
     }); 
     $(`#btnAddImageSection`).click(function(){
         AddContentInputSection("imgContent");
+        OpenFileDialog(); 
     }); 
     $(`#btnAddLinkSection`).click(function(){
         AddContentInputSection("linkContent");
@@ -182,8 +184,7 @@ function GetNewContentInputHTML(contentCategory, headerOrContent)
 
         if (contentCategory == "imgContent")
         {
-            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px;" placeholder="Enter image filename with filetype. File must 
-            be in data/images file (e.g "fileName.jpg")"></textarea>`;
+            return `<textarea class="form-control p-0 mb-1" id="newContent" rows="1" style="min-width: 100px;" placeholder="Enter image filename with filetype. File must be in '<user>/documents/data/images' file (e.g 'fileName.jpg')"></textarea>`;
         }
 
         if (contentCategory == "linkContent")
@@ -419,4 +420,34 @@ function EnableTabs(id){
             this.selectionEnd = start + 4;
         }
       });
+}
+
+function CopyImageToImageDir(imageFilePath)
+{
+    
+    if(imageFilePath[`canceled`] == true)
+    {
+        // Remove adding section
+        CancelAddContent(); 
+        return; 
+    }
+    else
+    {
+        console.log(imageFilePath[`filePaths`][0]);
+
+        // Copy image from path into documents/data/images
+        let file = imageFilePath[`filePaths`][0]; 
+        var n = file.lastIndexOf("\\"); 
+        var fileName = file.substring(n + 1);
+
+        fs.copyFile(imageFilePath[`filePaths`][0], `${globalUserPath}/Documents/MyLocalNotesApp/data/images/${fileName}`, (err) => {
+            if (err) throw err;
+            console.log('Image file was copied to destination');
+
+            // Set the text to the filename and click okay
+            $(`#newContent`).val(fileName);
+            $(`#submitNewSection`).click(); 
+        })
+
+    }
 }

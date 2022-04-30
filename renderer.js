@@ -59,3 +59,18 @@ function OpenDevTools()
 {
   ipc.send(`openDevTools`);
 }
+
+function OpenFileDialog()
+{
+  ipc.send(`getFileDialog`);
+}
+
+ipc.on('imageFileSelectResult', function (evt, result) {
+  if(result == "error")
+  {
+    console.log("error with user selecting file"); 
+  }
+  else{
+    CopyImageToImageDir(result); 
+  }
+});
