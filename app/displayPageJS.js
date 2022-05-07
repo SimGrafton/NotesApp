@@ -35,7 +35,7 @@ async function DisplayContent(category, subCategory, finalCategory){
 
         if (contentKey.includes("11IMG11")) {
             contentID = `${sectionID}11IMG11${globalFinalCategoryID}`;
-            contentClass = "imgContent p-1 ml-3 mb-3 align-self-center";
+            contentClass = "imgContent p-1 ms-3 mb-3 align-self-center";
 
             ImageSizes(`${response[i]}`, contentID);
 

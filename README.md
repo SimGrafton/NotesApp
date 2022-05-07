@@ -42,8 +42,7 @@ System - shortcuts to create shortcut, add icon to shortcut
 Current job:
 1-improvement. 
  
-Enable a file selector when adding an image. Have the function copy the image into the documents file as well
-and then set the source as that directory.
+Set horizontal overflow for main page so that large images dont go over anything. 
 
 commit - 
 ""
@@ -67,10 +66,13 @@ to do everything:
 - How to backup
 - What features would you like? This is a very basic notes application I've made simply for my work notes.
 
-1. Test for a while
-3. 1-bug. Sometimes the delete category button is unresponsive.
 Icon for shortcut isnt working
+If a huge image is selected, it will display over the side bar. Need to enable scrolling for anything outside the width
+of the display page. Possibly also have an image resizer?
 2. Remove the node modules not being used. It increases the install time. 
+3. Scratch pad - which saves the content so that remains when you create new categories and stuff
+The subcateories and final categories arnt displaying wide enough
+4. Need to be able to add content by right clicking anywhere on the page
 
 Future jobs:
 1. Enable dark mode
@@ -89,5 +91,8 @@ adding an index page. For this to work, the modules would have to not clash.
 redownload.
 12. Create tests for everything you do. So create file, delete file, enter content etc.... Then can run all when you change
 something.
+
+Bugs:
+1. 1-bug. Sometimes the delete category button is unresponsive.
 -- End of To do --
 
